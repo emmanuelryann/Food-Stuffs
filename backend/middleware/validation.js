@@ -49,6 +49,43 @@ export const validateProduct = [
     .withMessage('Public ID is required if image is provided')
 ];
 
+export const validateProductUpdate = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 255 }),
+
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 }),
+
+  body('price')
+    .optional()
+    .isFloat({ min: 0 }),
+
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 }),
+
+  body('countInStock')
+    .optional()
+    .isInt({ min: 0 }),
+
+  body('isActive')
+    .optional()
+    .isBoolean(),
+
+  body('image.url')
+    .optional()
+    .isURL(),
+
+  body('image.public_id')
+    .optional()
+    .trim()
+];
+
 export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

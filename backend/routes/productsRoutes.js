@@ -1,6 +1,6 @@
 import express from "express";
 import Product from "../models/product.js";
-import { validateProductId, validateProduct, handleValidationErrors } from "../middleware/validation.js";
+import { validateProductId, validateProduct, validateProductUpdate, handleValidationErrors } from "../middleware/validation.js";
 
 const router = express.Router();
 
@@ -8,7 +8,6 @@ function generateProductId() {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
 }
 
-// CREATE a new product
 router.post("/product", validateProduct, handleValidationErrors, async (req, res) => {
   try {
     const { name, description, price, category, countInStock, image, isActive } = req.body;
@@ -44,7 +43,6 @@ router.post("/product", validateProduct, handleValidationErrors, async (req, res
   }
 });
 
-// READ all products
 router.get("/products", async (req, res) => {
   try {
     const products = await Product.find({ isActive: true })
@@ -61,7 +59,6 @@ router.get("/products", async (req, res) => {
   }
 });
 
-// READ one product by ID
 router.get("/product/:id", validateProductId, handleValidationErrors, async (req, res) => {
   const { id } = req.params;
 
@@ -83,15 +80,17 @@ router.get("/product/:id", validateProductId, handleValidationErrors, async (req
   }
 });
 
-// UPDATE a product by ID
-router.put("/product/:id", validateProductId, validateProduct, handleValidationErrors, async (req, res) => {
+router.patch("/product/:id", validateProductId, validateProductUpdate, handleValidationErrors, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedProduct = await Product.findOneAndUpdate(
+        { productId: id },
+        { $set: req.body },
+        { new: true, runValidators: true }
+    )
+    .select("-__v -_id")
+    .lean()
 
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
@@ -99,19 +98,18 @@ router.put("/product/:id", validateProductId, validateProduct, handleValidationE
 
     return res.status(200).json(updatedProduct);
   } catch (error) {
+    console.error(error.message)
     return res.status(400).json({
-      message: "Failed to update product",
-      error: error.message,
+      message: "Failed to update product"
     });
   }
 });
 
-// DELETE a product by ID
 router.delete("/product/:id", validateProductId, handleValidationErrors, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedProduct = await Product.findByIdAndDelete(id);
+    const deletedProduct = await Product.findOneAndDelete({ productId: id });
 
     if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
@@ -119,9 +117,9 @@ router.delete("/product/:id", validateProductId, handleValidationErrors, async (
 
     return res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
+    console.error(error.message)
     return res.status(500).json({
-      message: "Failed to delete product",
-      error: error.message,
+      message: "Failed to delete product"
     });
   }
 });
