@@ -4,21 +4,48 @@ import Product from "../models/product.js";
 
 const router = express.Router();
 
+function generateProductId() {
+    return Math.floor(10000000 + Math.random() * 90000000).toString();
+}
+
 // CREATE a new product
-router.post("/", async (req, res) => {
+router.post("/product", async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const { name, description, price, category, countInStock, image, isActive } = req.body;
+    let inserted = false;
+    let product;
+
+    while (!inserted) {
+      try {
+        const productId = generateProductId();
+        product = await Product.create({
+          productId,
+          name,
+          description,
+          price,
+          category,
+          countInStock,
+          image,
+          isActive: isActive ?? true
+        });
+        inserted = true;
+      } catch (error) {
+        if (error.code === 11000) continue;
+        throw error;
+      }
+    }
+
     return res.status(201).json(product);
   } catch (error) {
-    return res.status(400).json({
+    console.error(error.message)
+    return res.status(500).json({
       message: "Failed to create product",
-      error: error.message,
     });
   }
 });
 
 // READ all products
-router.get("/", async (_req, res) => {
+router.get("/products", async (_req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
     return res.status(200).json(products);
@@ -31,7 +58,7 @@ router.get("/", async (_req, res) => {
 });
 
 // READ one product by ID
-router.get("/:id", async (req, res) => {
+router.get("/product/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -55,7 +82,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // UPDATE a product by ID
-router.put("/:id", async (req, res) => {
+router.put("/product/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -82,7 +109,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE a product by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/product/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {

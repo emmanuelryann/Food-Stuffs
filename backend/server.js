@@ -34,7 +34,7 @@ connectDB();
 
 // Routes
 // app.use("/auth", authRoutes);
-app.use("/api/products", productsRoutes);
+app.use("/api", productsRoutes);
 
 app.get('/', (req, res) => {
 	res.send('API is running and DB is connected!');

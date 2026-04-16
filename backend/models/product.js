@@ -1,6 +1,12 @@
 import { Schema, model } from 'mongoose';
 
 const productSchema = new Schema({
+  productId: {
+    type: String,
+    unique: true,
+    required: true
+  },
+
   name: {
     type: String,
     required: true,
@@ -21,16 +27,16 @@ const productSchema = new Schema({
     type: String,
     required: true,
     index: true
-  }, 
-
-  image: {
-    url: String,
-    public_id: String
   },
 
   countInStock: {
     type: Number,
     default: 0
+  },
+
+  image: {
+    url: String,
+    public_id: String
   },
 
   isActive: {
