@@ -2,7 +2,7 @@ import { body, validationResult, param, query } from 'express-validator';
 // import { sanitize } from 'express-mongo-sanitize';
 
 export const validateProductId = [
-  param('productId')
+  param('id')
     .matches(/^\d{8}$/)
     .withMessage('Product ID must be an 8-digit number')
 ];

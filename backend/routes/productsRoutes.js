@@ -66,7 +66,9 @@ router.get("/product/:id", validateProductId, handleValidationErrors, async (req
   const { id } = req.params;
 
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findOne({ productId: id })
+    .select("-__v -_id")
+    .lean();
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -74,9 +76,9 @@ router.get("/product/:id", validateProductId, handleValidationErrors, async (req
 
     return res.status(200).json(product);
   } catch (error) {
+    console.error(error.message)
     return res.status(500).json({
       message: "Failed to fetch product",
-      error: error.message,
     });
   }
 });
