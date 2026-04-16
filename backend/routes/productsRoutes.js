@@ -115,7 +115,7 @@ router.delete("/product/:id", validateProductId, handleValidationErrors, async (
       return res.status(404).json({ message: "Product not found" });
     }
 
-    return res.status(200).json({ message: "Product deleted successfully" });
+    return res.status(200).json({ message: `${deletedProduct.name} deleted successfully` });
   } catch (error) {
     console.error(error.message)
     return res.status(500).json({
