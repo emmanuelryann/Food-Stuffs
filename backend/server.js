@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// import mongoSanitize from "express-mongo-sanitize";
+// import mongoSanitize from 'express-mongo-sanitize';
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 // import authRoutes from "./routes/authRoutes.js";
@@ -27,6 +27,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+// app.use(mongoSanitize());
 // app.use(express.static('frontend'));
 
 // Connect to database
