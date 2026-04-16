@@ -47,12 +47,16 @@ router.post("/product", validateProduct, handleValidationErrors, async (req, res
 // READ all products
 router.get("/products", async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find({ isActive: true })
+    .sort({ createdAt: -1 })
+    .select("-__v -_id")
+    .lean();
+
     return res.status(200).json(products);
   } catch (error) {
+    console.error(error.message)
     return res.status(500).json({
-      message: "Failed to fetch products",
-      error: error.message,
+      message: "Failed to fetch products"
     });
   }
 });
