@@ -36,7 +36,7 @@ const productSchema = new Schema({
 
   image: {
     url: String,
-    public_id: String
+    fileId: String
   },
 
   isActive: {

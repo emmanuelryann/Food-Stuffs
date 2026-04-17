@@ -42,11 +42,11 @@ export const validateProduct = [
     .isURL()
     .withMessage('Must be a valid URL'),
   
-  body('image.public_id')
+  body('image.fileId')
     .optional()
     .trim()
     .notEmpty()
-    .withMessage('Public ID is required if image is provided')
+    .withMessage('File ID is required if image is provided')
 ];
 
 export const validateProductUpdate = [
@@ -81,7 +81,7 @@ export const validateProductUpdate = [
     .optional()
     .isURL(),
 
-  body('image.public_id')
+  body('image.fileId')
     .optional()
     .trim()
 ];
