@@ -44,13 +44,11 @@ router.get("/product/upload-signature", (req, res) => {
   }
 });
 
-// ─── Helper: delete a file from ImageKit by fileId ─────────────────────────────
 async function deleteImageKitFile(fileId) {
   if (!fileId) return;
   try {
     await getImageKit().deleteFile(fileId);
   } catch (error) {
-    // Log but don't throw — the DB operation should still succeed
     console.error(`ImageKit delete failed for fileId ${fileId}:`, error.message);
   }
 }

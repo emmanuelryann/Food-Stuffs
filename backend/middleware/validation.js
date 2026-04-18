@@ -101,3 +101,41 @@ export const handleValidationErrors = (req, res, next) => {
   }
   next();
 };
+
+export const validateCheckout = [
+  body('items')
+    .isArray({ min: 1 })
+    .withMessage('Items must be a non-empty array'),
+
+  body('items.*.productId')
+    .matches(/^\d{8}$/)
+    .withMessage('Each product ID must be an 8-digit number'),
+
+  body('items.*.quantity')
+    .isInt({ min: 1 })
+    .withMessage('Quantity must be an integer of at least 1'),
+
+  body('customerName')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Customer name must be between 2 and 255 characters'),
+
+  body('customerPhone')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Customer phone must not be empty if provided'),
+
+  body('customerAddress')
+    .trim()
+    .notEmpty()
+    .withMessage('Customer address is required')
+    .isLength({ max: 500 })
+    .withMessage('Address must not exceed 500 characters'),
+
+  body('deliveryFee')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Delivery fee must be a non-negative number')
+];

@@ -15,33 +15,49 @@ const orderSchema = new Schema({
     type: String
   },
 
+  customerAddress: {
+    type: String,
+    required: true
+  },
+
   items: [
     {
       productId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Product'
       },
       name: {
         type: String,
-        required: true },
+        required: true
+      },
       quantity: {
         type: Number,
-        required: true },
+        required: true
+      },
       priceAtPurchase: {
         type: Number,
-        required: true }
+        required: true
+      }
     }
   ],
 
+  deliveryFee: {
+    type: Number,
+    default: 0
+  },
+
   totalAmount: {
     type: Number,
-    required: true },
+    required: true
+  },
   
   status: { 
     type: String, 
     enum: ['pending', 'completed', 'cancelled'], 
     default: 'pending' 
   }
-}, { timestamps: true });
+},
+
+{ timestamps: true });
 
 export default model('Order', orderSchema);

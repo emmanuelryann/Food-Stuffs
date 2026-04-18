@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 // import mongoSanitize from 'express-mongo-sanitize';
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 // import authRoutes from "./routes/authRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +37,7 @@ connectDB();
 // Routes
 // app.use("/auth", authRoutes);
 app.use("/api", productsRoutes);
+app.use("/api", orderRoutes);
 
 app.get('/', (req, res) => {
 	res.send('API is running and DB is connected!');
