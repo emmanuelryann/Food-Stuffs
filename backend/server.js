@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-// import authRoutes from "./routes/authRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +35,7 @@ app.use(cookieParser());
 connectDB();
 
 // Routes
-// app.use("/auth", authRoutes);
+app.use("/auth", adminRoutes);
 app.use("/api", productsRoutes);
 app.use("/api", orderRoutes);
 
