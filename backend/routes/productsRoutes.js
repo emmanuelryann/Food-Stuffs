@@ -1,6 +1,7 @@
 import express from "express";
 import Product from "../models/product.js";
 import ImageKit from "imagekit";
+import { requireAuth } from "../middleware/authentication.js";
 import { validateProductId, validateProduct, validateProductUpdate, handleValidationErrors } from "../middleware/validation.js";
 
 const router = express.Router();
@@ -21,7 +22,7 @@ function generateProductId() {
   return Math.floor(10000000 + Math.random() * 90000000).toString();
 }
 
-router.get("/product/upload-signature", (req, res) => {
+router.get("/product/upload-signature", requireAuth, (req, res) => {
   try{
     console.log("Query Received:", req.query);
     const { fileSize, fileType } = req.query;
@@ -53,7 +54,7 @@ async function deleteImageKitFile(fileId) {
   }
 }
 
-router.post("/product", validateProduct, handleValidationErrors, async (req, res) => {
+router.post("/product", validateProduct, handleValidationErrors, requireAuth, async (req, res) => {
   try {
     const { name, description, price, category, countInStock, image, isActive } = req.body;
     let inserted = false;
@@ -125,7 +126,7 @@ router.get("/product/:id", validateProductId, handleValidationErrors, async (req
   }
 });
 
-router.patch("/product/:id", validateProductId, validateProductUpdate, handleValidationErrors, async (req, res) => {
+router.patch("/product/:id", validateProductId, validateProductUpdate, handleValidationErrors, requireAuth, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -164,7 +165,7 @@ router.patch("/product/:id", validateProductId, validateProductUpdate, handleVal
   }
 });
 
-router.delete("/product/:id", validateProductId, handleValidationErrors, async (req, res) => {
+router.delete("/product/:id", validateProductId, handleValidationErrors, requireAuth, async (req, res) => {
   const { id } = req.params;
 
   try {
