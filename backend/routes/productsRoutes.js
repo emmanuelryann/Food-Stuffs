@@ -54,7 +54,7 @@ async function deleteImageKitFile(fileId) {
   }
 }
 
-router.post("/product", validateProduct, handleValidationErrors, requireAuth, async (req, res) => {
+router.post("/product", requireAuth, validateProduct, handleValidationErrors, async (req, res) => {
   try {
     const { name, description, price, category, countInStock, image, isActive } = req.body;
     let inserted = false;
@@ -126,7 +126,7 @@ router.get("/product/:id", validateProductId, handleValidationErrors, async (req
   }
 });
 
-router.patch("/product/:id", validateProductId, validateProductUpdate, handleValidationErrors, requireAuth, async (req, res) => {
+router.patch("/product/:id", requireAuth, validateProductId, validateProductUpdate, handleValidationErrors, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -165,7 +165,7 @@ router.patch("/product/:id", validateProductId, validateProductUpdate, handleVal
   }
 });
 
-router.delete("/product/:id", validateProductId, handleValidationErrors, requireAuth, async (req, res) => {
+router.delete("/product/:id", requireAuth, validateProductId, handleValidationErrors, async (req, res) => {
   const { id } = req.params;
 
   try {

@@ -160,6 +160,28 @@ export const validateLogin = [
     .withMessage('Password is required'),
 ];
 
+export const validateOrderId = [
+  param('id')
+    .matches(/^ORD-\d{4}$/)
+    .withMessage('Order ID must be in the format ORD-XXXX')
+];
+
+export const validateOrderStatus = [
+  body('status')
+    .isIn(['pending', 'completed', 'cancelled'])
+    .withMessage('Status must be one of: pending, completed, cancelled')
+];
+
+export const validateBulkDelete = [
+  body('orderIds')
+    .isArray({ min: 1 })
+    .withMessage('orderIds must be a non-empty array'),
+
+  body('orderIds.*')
+    .matches(/^ORD-\d{4}$/)
+    .withMessage('Each order ID must be in the format ORD-XXXX')
+];
+
 export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

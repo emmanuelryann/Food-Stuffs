@@ -1,7 +1,8 @@
 import express from "express";
 import Order from "../models/order.js";
 import Product from "../models/product.js";
-import { validateCheckout, handleValidationErrors } from "../middleware/validation.js";
+import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
+import { validateCheckout, validateOrderId, validateOrderStatus, validateBulkDelete, handleValidationErrors } from "../middleware/validation.js";
 
 const router = express.Router();
 
@@ -45,6 +46,16 @@ function formatOrderMessage(order) {
 function buildWhatsAppUrl(phoneNumber, message) {
   const encoded = encodeURIComponent(message);
   return `https://wa.me/${phoneNumber}?text=${encoded}`;
+}
+
+function cleanOrder(order) {
+  const obj = order.toObject();
+  delete obj._id;
+  delete obj.__v;
+  if (obj.items) {
+    obj.items.forEach(item => delete item._id);
+  }
+  return obj;
 }
 
 router.post("/orders/checkout", validateCheckout, handleValidationErrors, async (req, res) => {
@@ -118,25 +129,107 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       status: "pending",
     });
 
-    const orderObj = order.toObject();
-    delete orderObj._id;
-    delete orderObj.__v;
-    if (orderObj.items) {
-      orderObj.items.forEach(item => delete item._id);
-    }
-
     const formattedMessage = formatOrderMessage(order);
     const whatsappNumber = process.env.WHATSAPP_NUMBER || "";
     const whatsappUrl = buildWhatsAppUrl(whatsappNumber, formattedMessage);
 
     return res.status(201).json({
-      order: orderObj,
+      order: cleanOrder(order),
       formattedMessage,
       whatsappUrl,
     });
   } catch (error) {
     console.error(error.message);
     return res.status(500).json({ message: "Failed to process checkout" });
+  }
+});
+
+router.get("/orders", requireAuth, async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .sort({ createdAt: -1 })
+      .select("-__v -_id -items._id")
+      .lean();
+
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to fetch orders" });
+  }
+});
+
+router.delete("/orders/bulk-delete", requireSuperAdmin, validateBulkDelete, handleValidationErrors, async (req, res) => {
+  try {
+    const { orderIds } = req.body;
+
+    const result = await Order.deleteMany({ orderId: { $in: orderIds } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No matching orders found" });
+    }
+
+    return res.status(200).json({
+      message: `${result.deletedCount} order(s) deleted successfully`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to delete orders" });
+  }
+});
+
+router.get("/orders/:id", requireAuth, validateOrderId, handleValidationErrors, async (req, res) => {
+  try {
+    const order = await Order.findOne({ orderId: req.params.id })
+      .select("-__v -_id -items._id")
+      .lean();
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res.status(200).json(order);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to fetch order" });
+  }
+});
+
+router.patch("/orders/:id/status", requireAuth, validateOrderId, validateOrderStatus, handleValidationErrors, async (req, res) => {
+  try {
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId: req.params.id },
+      { $set: { status: req.body.status } },
+      { new: true, runValidators: true }
+    )
+      .select("-__v -_id -items._id")
+      .lean();
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to update order status" });
+  }
+});
+
+router.delete("/orders/:id", requireSuperAdmin, validateOrderId, handleValidationErrors, async (req, res) => {
+  try {
+    const deletedOrder = await Order.findOneAndDelete({ orderId: req.params.id });
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res.status(200).json({
+      message: `Order #${deletedOrder.orderId} deleted successfully`,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to delete order" });
   }
 });
 
