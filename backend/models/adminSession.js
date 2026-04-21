@@ -7,6 +7,19 @@ const adminSessionSchema = new Schema({
     required: true,
   },
 
+  email: {
+    type: String,
+    required: true,
+    lowercase: true,
+    trim: true,
+  },
+
+  role: {
+    type: String,
+    enum: ['admin', 'super_admin'],
+    default: 'admin'
+  },
+
   token: {
     type: String,
     required: true,

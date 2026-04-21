@@ -197,6 +197,8 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 		// Create new session document
 		const newSession = new AdminSession({
 			adminId: admin._id,
+			email: admin.email,
+			role: admin.role,
 			token: token.substring(0, 50),
 			deviceInfo: deviceInfo,
 			ipAddress: ipAddress,
