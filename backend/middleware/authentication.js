@@ -13,7 +13,7 @@ export async function requireAuth(req, res, next) {
     // Check if session still exists in database
     const session = await AdminSession.findOne({
       adminId: decoded.adminId,
-      token: token.substring(0, 50),
+      token: token,
       isActive: true,
       expiresAt: { $gt: new Date() },
     });
@@ -44,7 +44,7 @@ export async function requireSuperAdmin(req, res, next) {
     // Check if session still exists in database
     const session = await AdminSession.findOne({
       adminId: decoded.adminId,
-      token: token.substring(0, 50),
+      token: token,
       isActive: true,
       expiresAt: { $gt: new Date() },
     });

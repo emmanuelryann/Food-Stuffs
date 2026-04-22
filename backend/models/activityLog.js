@@ -34,7 +34,7 @@ const activityLogSchema = new Schema({
   },
 
   targetId: {
-    type: String
+    type: Schema.Types.Mixed
   },
 
   details: {

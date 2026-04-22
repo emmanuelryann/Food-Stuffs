@@ -221,4 +221,25 @@ router.delete("/product/:id", requireAuth, validateProductId, handleValidationEr
   }
 });
 
+router.post("/track-activity", (req, res) => {
+  try {
+    const { productId, productIds, actionType = "button_click" } = req.body;
+
+    // Do not block or await — fire and forget
+    logActivity({
+      action: 'click_intent',
+      targetType: 'product',
+      targetId: productIds || productId, // Can now handle both array and string
+      details: `Customer clicked: ${actionType}`,
+      req // Captures IP and Device Info from the guest
+    });
+
+    // 204 No Content makes the request extremely lightweight for the frontend
+    res.status(204).send();
+  } catch (error) {
+    console.error("Activity tracking error:", error.message);
+    res.status(500).send();
+  }
+});
+
 export default router;

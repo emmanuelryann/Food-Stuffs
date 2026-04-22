@@ -209,7 +209,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 			adminId: admin._id,
 			email: admin.email,
 			role: admin.role,
-			token: token.substring(0, 50),
+			token: token,
 			deviceInfo: deviceInfo,
 			ipAddress: ipAddress,
 			isActive: true,
@@ -273,7 +273,7 @@ router.post("/logout", async (req, res) => {
 
 		// Delete only the active session with matching token
 		await AdminSession.deleteOne({
-			token: token.substring(0, 50),
+			token: token,
 			isActive: true
 		});
 
