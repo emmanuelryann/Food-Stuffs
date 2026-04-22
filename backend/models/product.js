@@ -39,6 +39,11 @@ const productSchema = new Schema({
     fileId: String
   },
 
+  inStock: {
+    type: Boolean,
+    default: true
+  },
+
   isActive: {
     type: Boolean,
     default: true

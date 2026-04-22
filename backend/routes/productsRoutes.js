@@ -3,6 +3,7 @@ import Product from "../models/product.js";
 import ImageKit from "imagekit";
 import { requireAuth } from "../middleware/authentication.js";
 import { validateProductId, validateProduct, validateProductUpdate, handleValidationErrors } from "../middleware/validation.js";
+import { logActivity } from "../utils/logActivity.js";
 
 const router = express.Router();
 
@@ -80,6 +81,15 @@ router.post("/product", requireAuth, validateProduct, handleValidationErrors, as
       }
     }
 
+    logActivity({
+      action: 'product_created',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'product',
+      targetId: product.productId,
+      details: `Product created: ${product.name}`,
+      req,
+    });
+
     return res.status(201).json(product);
   } catch (error) {
     console.error(error.message)
@@ -144,9 +154,12 @@ router.patch("/product/:id", requireAuth, validateProductId, validateProductUpda
       }
     }
 
+    const updateData = { ...req.body };
+    delete updateData.productId;
+
     const updatedProduct = await Product.findOneAndUpdate(
         { productId: id },
-        { $set: req.body },
+        { $set: updateData },
         { new: true, runValidators: true }
     )
     .select("-__v -_id")
@@ -155,6 +168,16 @@ router.patch("/product/:id", requireAuth, validateProductId, validateProductUpda
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
+
+    logActivity({
+      action: 'product_updated',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'product',
+      targetId: id,
+      details: `Product updated: ${updatedProduct.name}`,
+      metadata: { updatedFields: Object.keys(updateData) },
+      req,
+    });
 
     return res.status(200).json(updatedProduct);
   } catch (error) {
@@ -179,6 +202,15 @@ router.delete("/product/:id", requireAuth, validateProductId, handleValidationEr
     if (deletedProduct.image?.fileId) {
       await deleteImageKitFile(deletedProduct.image.fileId);
     }
+
+    logActivity({
+      action: 'product_deleted',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'product',
+      targetId: id,
+      details: `Product deleted: ${deletedProduct.name}`,
+      req,
+    });
 
     return res.status(200).json({ message: `${deletedProduct.name} deleted successfully` });
   } catch (error) {

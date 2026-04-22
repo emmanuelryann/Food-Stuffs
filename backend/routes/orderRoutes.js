@@ -3,6 +3,7 @@ import Order from "../models/order.js";
 import Product from "../models/product.js";
 import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
 import { validateCheckout, validateOrderId, validateOrderStatus, validateBulkDelete, handleValidationErrors } from "../middleware/validation.js";
+import { logActivity } from "../utils/logActivity.js";
 
 const router = express.Router();
 
@@ -133,6 +134,15 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
     const whatsappNumber = process.env.WHATSAPP_NUMBER || "";
     const whatsappUrl = buildWhatsAppUrl(whatsappNumber, formattedMessage);
 
+    logActivity({
+      action: 'order_created',
+      targetType: 'order',
+      targetId: orderId,
+      details: `New checkout order placed: ${orderId}`,
+      metadata: { customerName, totalAmount },
+      req,
+    });
+
     return res.status(201).json({
       order: cleanOrder(order),
       formattedMessage,
@@ -167,6 +177,15 @@ router.delete("/orders/bulk-delete", requireSuperAdmin, validateBulkDelete, hand
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "No matching orders found" });
     }
+
+    logActivity({
+      action: 'orders_bulk_deleted',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'order',
+      details: `Bulk deleted ${result.deletedCount} orders`,
+      metadata: { deletedOrderIds: orderIds },
+      req,
+    });
 
     return res.status(200).json({
       message: `${result.deletedCount} order(s) deleted successfully`,
@@ -209,6 +228,15 @@ router.patch("/orders/:id/status", requireAuth, validateOrderId, validateOrderSt
       return res.status(404).json({ message: "Order not found" });
     }
 
+    logActivity({
+      action: 'order_status_updated',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'order',
+      targetId: req.params.id,
+      details: `Order status updated to ${req.body.status}`,
+      req,
+    });
+
     return res.status(200).json(updatedOrder);
   } catch (error) {
     console.error(error.message);
@@ -223,6 +251,15 @@ router.delete("/orders/:id", requireSuperAdmin, validateOrderId, handleValidatio
     if (!deletedOrder) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    logActivity({
+      action: 'order_deleted',
+      performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+      targetType: 'order',
+      targetId: req.params.id,
+      details: `Order deleted`,
+      req,
+    });
 
     return res.status(200).json({
       message: `Order #${deletedOrder.orderId} deleted successfully`,

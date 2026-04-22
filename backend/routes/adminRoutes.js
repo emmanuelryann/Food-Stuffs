@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import AdminSession from "../models/adminSession.js";
 import { validateSignup, validateLogin, handleValidationErrors } from '../middleware/validation.js';
+import { logActivity } from '../utils/logActivity.js';
 
 const router = express.Router();
 
@@ -78,6 +79,15 @@ router.post("/signup", validateSignup, handleValidationErrors, async (req, res) 
 
 		// Save admin
 		await newAdmin.save();
+
+		logActivity({
+			action: 'admin_signup',
+			performedBy: { adminId: newAdmin._id, email: newAdmin.email, role: newAdmin.role },
+			targetType: 'admin',
+			targetId: newAdmin._id.toString(),
+			details: `New admin account created: ${newAdmin.email}`,
+			req,
+		});
 
 		res.status(201).json({
 			success: true,
@@ -216,6 +226,15 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
+		logActivity({
+			action: 'admin_login',
+			performedBy: { adminId: admin._id, email: admin.email, role: admin.role },
+			targetType: 'admin',
+			targetId: admin._id.toString(),
+			details: `Admin logged in: ${admin.email}`,
+			req,
+		});
+
 		res.status(200).json({
 			success: true,
 			message: "Login successful",
@@ -248,10 +267,22 @@ router.post("/logout", async (req, res) => {
 			});
 		}
 
+		// Decode token to get admin info for the log
+		let decoded = {};
+		try { decoded = jwt.verify(token, process.env.JWT_SECRET); } catch (e) { /* token may be expired */ }
+
 		// Delete only the active session with matching token
 		await AdminSession.deleteOne({
 			token: token.substring(0, 50),
 			isActive: true
+		});
+
+		logActivity({
+			action: 'admin_logout',
+			performedBy: { adminId: decoded.adminId, email: decoded.email, role: decoded.role },
+			targetType: 'admin',
+			details: `Admin logged out: ${decoded.email || 'unknown'}`,
+			req,
 		});
 
 		// Clear the cookie

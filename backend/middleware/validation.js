@@ -37,6 +37,11 @@ export const validateProduct = [
     .isBoolean()
     .withMessage('isActive must be a boolean'),
 
+  body('inStock')
+    .optional()
+    .isBoolean()
+    .withMessage('inStock must be a boolean'),
+
   body('image.url')
     .optional()
     .isURL()
@@ -74,6 +79,10 @@ export const validateProductUpdate = [
     .isInt({ min: 0 }),
 
   body('isActive')
+    .optional()
+    .isBoolean(),
+
+  body('inStock')
     .optional()
     .isBoolean(),
 
