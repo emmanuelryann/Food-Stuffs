@@ -1,6 +1,7 @@
 import express from "express";
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import StoreSettings from "../models/storeSettings.js";
 import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
 import { validateCheckout, validateOrderId, validateOrderStatus, validateBulkDelete, handleValidationErrors } from "../middleware/validation.js";
 import { logActivity } from "../utils/logActivity.js";
@@ -12,12 +13,13 @@ function generateOrderId() {
   return `ORD-${num}`;
 }
 
-function formatOrderMessage(order) {
+function formatOrderMessage(order, settings) {
+  const currency = settings.currencySymbol || "$";
   let message = `🧾 *Order #${order.orderId}*\n\n`;
 
   order.items.forEach((item) => {
     const lineTotal = item.quantity * item.priceAtPurchase;
-    message += `• ${item.name} x${item.quantity} — $${lineTotal.toFixed(2)}\n`;
+    message += `• ${item.name} x${item.quantity} — ${currency}${lineTotal.toFixed(2)}\n`;
   });
 
   const subtotal = order.items.reduce(
@@ -26,13 +28,17 @@ function formatOrderMessage(order) {
   );
 
   message += `\n-------------------\n`;
-  message += `Subtotal: $${subtotal.toFixed(2)}\n`;
+  message += `Subtotal: ${currency}${subtotal.toFixed(2)}\n`;
 
-  if (order.deliveryFee > 0) {
-    message += `Delivery: $${order.deliveryFee.toFixed(2)}\n`;
+  if (order.taxAmount > 0) {
+    message += `Tax: ${currency}${order.taxAmount.toFixed(2)}\n`;
   }
 
-  message += `*Total: $${order.totalAmount.toFixed(2)}*\n`;
+  if (order.deliveryFee > 0) {
+    message += `Delivery: ${currency}${order.deliveryFee.toFixed(2)}\n`;
+  }
+
+  message += `*Total: ${currency}${order.totalAmount.toFixed(2)}*\n`;
 
   if (order.customerName) {
     message += `\nCustomer: ${order.customerName}`;
@@ -61,12 +67,22 @@ function cleanOrder(order) {
 
 router.post("/orders/checkout", validateCheckout, handleValidationErrors, async (req, res) => {
   try {
+    // Fetch global store settings
+    const settings = await StoreSettings.findById("global_settings").lean();
+    if (!settings) {
+      return res.status(500).json({ message: "Store settings not configured" });
+    }
+
+    // Check if store is open
+    if (!settings.isStoreOpen) {
+      return res.status(503).json({ message: "Sorry, the store is currently closed" });
+    }
+
     const {
       items,
       customerName,
       customerPhone,
       customerAddress,
-      deliveryFee = 0,
     } = req.body;
 
     const productIds = items.map((item) => item.productId);
@@ -109,7 +125,20 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       (sum, item) => sum + item.quantity * item.priceAtPurchase,
       0
     );
-    const totalAmount = subtotal + deliveryFee;
+
+    // Enforce minimum order amount
+    if (settings.minOrderAmount > 0 && subtotal < settings.minOrderAmount) {
+      const currency = settings.currencySymbol || "$";
+      return res.status(400).json({
+        message: `Minimum order amount is ${currency}${settings.minOrderAmount.toFixed(2)}`,
+      });
+    }
+
+    // Calculate fees from store settings
+    const taxAmount = subtotal * (settings.taxPercentage / 100);
+    const percentageDelivery = subtotal * (settings.deliveryFeePercentage / 100);
+    const deliveryFee = percentageDelivery + settings.fixedDeliveryFee;
+    const totalAmount = subtotal + taxAmount + deliveryFee;
 
     let orderId;
     let isUnique = false;
@@ -125,13 +154,14 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       customerPhone,
       customerAddress,
       items: orderItems,
+      taxAmount,
       deliveryFee,
       totalAmount,
       status: "pending",
     });
 
-    const formattedMessage = formatOrderMessage(order);
-    const whatsappNumber = process.env.WHATSAPP_NUMBER || "";
+    const formattedMessage = formatOrderMessage(order, settings);
+    const whatsappNumber = settings.whatsappNumber || "";
     const whatsappUrl = buildWhatsAppUrl(whatsappNumber, formattedMessage);
 
     logActivity({

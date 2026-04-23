@@ -126,11 +126,49 @@ export const validateCheckout = [
     .withMessage('Customer address is required')
     .isLength({ max: 500 })
     .withMessage('Address must not exceed 500 characters'),
+];
 
-  body('deliveryFee')
+export const validateSettings = [
+  body('taxPercentage')
+    .optional()
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Tax percentage must be between 0 and 100'),
+
+  body('deliveryFeePercentage')
+    .optional()
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Delivery fee percentage must be between 0 and 100'),
+
+  body('fixedDeliveryFee')
     .optional()
     .isFloat({ min: 0 })
-    .withMessage('Delivery fee must be a non-negative number')
+    .withMessage('Fixed delivery fee must be a non-negative number'),
+
+  body('minOrderAmount')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Minimum order amount must be a non-negative number'),
+
+  body('whatsappNumber')
+    .optional()
+    .trim(),
+
+  body('currencySymbol')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 5 })
+    .withMessage('Currency symbol must be between 1 and 5 characters'),
+
+  body('isStoreOpen')
+    .optional()
+    .isBoolean()
+    .withMessage('isStoreOpen must be a boolean'),
+
+  body('promoBanner')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Promo banner must not exceed 500 characters'),
 ];
 
 export const validateSignup = [

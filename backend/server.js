@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import settingsRoutes from "./routes/settingsRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +21,7 @@ const app = express();
 app.use(
 	cors({
 		origin: ["http://localhost:3000", "http://localhost:5173"],
-		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),
@@ -38,6 +39,7 @@ connectDB();
 app.use("/auth", adminRoutes);
 app.use("/api", productsRoutes);
 app.use("/api", orderRoutes);
+app.use("/api", settingsRoutes);
 
 app.get('/', (req, res) => {
 	res.send('API is running and DB is connected!');

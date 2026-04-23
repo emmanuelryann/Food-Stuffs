@@ -15,6 +15,7 @@ const activityLogSchema = new Schema({
       'order_status_updated',
       'order_deleted',
       'orders_bulk_deleted',
+      'settings_updated',
       'click_intent',
     ]
   },
@@ -30,7 +31,7 @@ const activityLogSchema = new Schema({
 
   targetType: {
     type: String,
-    enum: ['product', 'order', 'admin', 'system']
+    enum: ['product', 'order', 'admin', 'system', 'settings']
   },
 
   targetId: {
