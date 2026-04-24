@@ -129,11 +129,6 @@ export const validateCheckout = [
 ];
 
 export const validateSettings = [
-  body('taxPercentage')
-    .optional()
-    .isFloat({ min: 0, max: 100 })
-    .withMessage('Tax percentage must be between 0 and 100'),
-
   body('deliveryFeePercentage')
     .optional()
     .isFloat({ min: 0, max: 100 })

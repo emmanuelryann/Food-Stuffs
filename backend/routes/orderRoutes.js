@@ -30,10 +30,6 @@ function formatOrderMessage(order, settings) {
   message += `\n-------------------\n`;
   message += `Subtotal: ${currency}${subtotal.toFixed(2)}\n`;
 
-  if (order.taxAmount > 0) {
-    message += `Tax: ${currency}${order.taxAmount.toFixed(2)}\n`;
-  }
-
   if (order.deliveryFee > 0) {
     message += `Delivery: ${currency}${order.deliveryFee.toFixed(2)}\n`;
   }
@@ -133,11 +129,10 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       });
     }
 
-    // Calculate fees from store settings
-    const taxAmount = subtotal * (settings.taxPercentage / 100);
+    // Calculate delivery fee from store settings
     const percentageDelivery = subtotal * (settings.deliveryFeePercentage / 100);
     const deliveryFee = percentageDelivery + settings.fixedDeliveryFee;
-    const totalAmount = subtotal + taxAmount + deliveryFee;
+    const totalAmount = subtotal + deliveryFee;
 
     let orderId;
     let isUnique = false;
@@ -153,7 +148,6 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       customerPhone,
       customerAddress,
       items: orderItems,
-      taxAmount,
       deliveryFee,
       totalAmount,
       status: "pending",
