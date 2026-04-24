@@ -197,6 +197,28 @@ export const validateLogin = [
     .withMessage('Password is required'),
 ];
 
+export const validateChangePassword = [
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('Current password is required'),
+
+  body('newPassword')
+    .isLength({ min: 8 })
+    .withMessage('New password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('New password must contain at least one uppercase letter, one lowercase letter, and one number'),
+];
+
+export const validateAdminStatus = [
+  param('id')
+    .isMongoId()
+    .withMessage('Invalid admin ID'),
+
+  body('status')
+    .isIn(['active', 'deactivated', 'suspended', 'deleted'])
+    .withMessage('Status must be one of: active, deactivated, suspended, deleted'),
+];
+
 export const validateOrderId = [
   param('id')
     .matches(/^ORD-\d{4}$/)

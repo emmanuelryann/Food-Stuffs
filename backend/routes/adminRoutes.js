@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import AdminSession from "../models/adminSession.js";
-import { validateSignup, validateLogin, handleValidationErrors } from '../middleware/validation.js';
+import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
+import { validateSignup, validateLogin, validateChangePassword, validateAdminStatus, handleValidationErrors } from '../middleware/validation.js';
 import { logActivity } from '../utils/logActivity.js';
 
 const router = express.Router();
@@ -133,19 +134,6 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 			});
 		}
 
-		// Check admin status
-		if (admin.status !== 'active') {
-			const statusMessages = {
-				deactivated: "Your account has been deactivated. Please contact support.",
-				suspended: "Your account has been suspended. Please contact support.",
-				deleted: "Your account has been deleted.",
-			};
-			return res.status(403).json({
-				success: false,
-				message: statusMessages[admin.status] || "You are not permitted to login.",
-			});
-		}
-
 		// Check if account is locked
 		if (admin.lockUntil && admin.lockUntil > Date.now()) {
 			const minutesLeft = Math.ceil((admin.lockUntil - Date.now()) / 60000);
@@ -174,6 +162,19 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 				message: newAttempts >= maxAttempts
 					? "Too many failed attempts. Account locked for 15 minutes."
 					: `Invalid email or password. ${maxAttempts - newAttempts} attempt(s) remaining.`,
+			});
+		}
+
+		// Check admin status
+		if (admin.status !== 'active') {
+			const statusMessages = {
+				deactivated: "Your account has been deactivated. Please contact support.",
+				suspended: "Your account has been suspended. Please contact support.",
+				deleted: "Your account has been deleted.",
+			};
+			return res.status(403).json({
+				success: false,
+				message: statusMessages[admin.status] || "You are not permitted to login.",
 			});
 		}
 
@@ -303,6 +304,106 @@ router.post("/logout", async (req, res) => {
 			success: false,
 			message: "Server error during logout",
 		});
+	}
+});
+
+// Change own password (any logged-in admin)
+router.patch("/change-password", requireAuth, validateChangePassword, handleValidationErrors, async (req, res) => {
+	try {
+		const { currentPassword, newPassword } = req.body;
+
+		// Find the logged-in admin
+		const admin = await Admin.findById(req.user.adminId);
+		if (!admin) {
+			return res.status(404).json({ success: false, message: "Admin not found" });
+		}
+
+		// Verify current password
+		const isMatch = await bcrypt.compare(currentPassword, admin.password);
+		if (!isMatch) {
+			return res.status(401).json({ success: false, message: "Current password is incorrect" });
+		}
+
+		// Prevent reusing the same password
+		const isSamePassword = await bcrypt.compare(newPassword, admin.password);
+		if (isSamePassword) {
+			return res.status(400).json({ success: false, message: "New password must be different from current password" });
+		}
+
+		// Hash and save the new password
+		const hashedPassword = await bcrypt.hash(newPassword, 12);
+		await Admin.updateOne({ _id: admin._id }, { $set: { password: hashedPassword } });
+
+		// Invalidate all active sessions for this admin
+		await AdminSession.deleteMany({ adminId: admin._id });
+
+		// Clear the authentication cookie
+		res.clearCookie('authToken', {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'lax',
+		});
+
+		logActivity({
+			action: 'admin_password_changed',
+			performedBy: { adminId: admin._id, email: admin.email, role: admin.role },
+			targetType: 'admin',
+			targetId: admin._id.toString(),
+			details: `Admin changed their password: ${admin.email}`,
+			req,
+		});
+
+		return res.status(200).json({ success: true, message: "Password changed successfully. Please log in again." });
+	} catch (error) {
+		console.error("Change password error:", error);
+		return res.status(500).json({ success: false, message: "Server error during password change" });
+	}
+});
+
+// Update admin status (super admin only)
+router.patch("/admin/:id/status", requireSuperAdmin, validateAdminStatus, handleValidationErrors, async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { status } = req.body;
+
+		// Prevent super admin from changing their own status
+		if (id === req.user.adminId) {
+			return res.status(403).json({ success: false, message: "You cannot change your own account status" });
+		}
+
+		const admin = await Admin.findById(id);
+		if (!admin) {
+			return res.status(404).json({ success: false, message: "Admin not found" });
+		}
+
+		const previousStatus = admin.status;
+
+		// Update the status
+		await Admin.updateOne({ _id: id }, { $set: { status } });
+
+		// If the admin is being deactivated/suspended/deleted, kill all their active sessions
+		if (status !== 'active') {
+			await AdminSession.deleteMany({ adminId: id });
+		}
+
+		logActivity({
+			action: 'admin_status_updated',
+			performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
+			targetType: 'admin',
+			targetId: id,
+			details: `Admin status changed from ${previousStatus} to ${status}: ${admin.email}`,
+			metadata: { previousStatus, newStatus: status },
+			req,
+		});
+
+		return res.status(200).json({
+			success: true,
+			message: `Admin status updated to ${status}`,
+			admin: { id: admin._id, name: admin.name, email: admin.email, status },
+		});
+	} catch (error) {
+		console.error("Update admin status error:", error);
+		return res.status(500).json({ success: false, message: "Server error during status update" });
 	}
 });
 

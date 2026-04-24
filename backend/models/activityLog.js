@@ -8,6 +8,8 @@ const activityLogSchema = new Schema({
       'admin_signup',
       'admin_login',
       'admin_logout',
+      'admin_password_changed',
+      'admin_status_updated',
       'product_created',
       'product_updated',
       'product_deleted',
