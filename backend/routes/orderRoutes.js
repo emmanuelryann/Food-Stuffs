@@ -73,7 +73,6 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       return res.status(500).json({ message: "Store settings not configured" });
     }
 
-    // Check if store is open
     if (!settings.isStoreOpen) {
       return res.status(503).json({ message: "Sorry, the store is currently closed" });
     }

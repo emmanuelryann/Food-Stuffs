@@ -17,7 +17,6 @@ async function seedSettings() {
 }
 seedSettings().catch(err => console.error("Settings seed failed:", err.message));
 
-// Public — Frontend fetches this on app load
 router.get("/settings", async (req, res) => {
   try {
     const settings = await StoreSettings.findById(SETTINGS_ID)
