@@ -10,6 +10,7 @@ import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +41,7 @@ app.use("/auth", adminRoutes);
 app.use("/api", productsRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", settingsRoutes);
+app.use("/api", analyticsRoutes);
 
 app.get('/', (req, res) => {
 	res.send('API is running and DB is connected!');
