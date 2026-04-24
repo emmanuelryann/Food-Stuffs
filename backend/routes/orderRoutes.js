@@ -129,9 +129,8 @@ router.post("/orders/checkout", validateCheckout, handleValidationErrors, async 
       });
     }
 
-    // Calculate delivery fee from store settings
-    const percentageDelivery = subtotal * (settings.deliveryFeePercentage / 100);
-    const deliveryFee = percentageDelivery + settings.fixedDeliveryFee;
+    // Calculate total with fixed delivery fee from store settings
+    const deliveryFee = settings.fixedDeliveryFee;
     const totalAmount = subtotal + deliveryFee;
 
     let orderId;

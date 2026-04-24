@@ -6,13 +6,6 @@ const storeSettingsSchema = new Schema({
     default: 'global_settings'
   },
 
-  deliveryFeePercentage: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
-
   fixedDeliveryFee: {
     type: Number,
     default: 0,

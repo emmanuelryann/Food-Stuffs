@@ -129,11 +129,6 @@ export const validateCheckout = [
 ];
 
 export const validateSettings = [
-  body('deliveryFeePercentage')
-    .optional()
-    .isFloat({ min: 0, max: 100 })
-    .withMessage('Delivery fee percentage must be between 0 and 100'),
-
   body('fixedDeliveryFee')
     .optional()
     .isFloat({ min: 0 })
