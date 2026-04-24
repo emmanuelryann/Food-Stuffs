@@ -132,4 +132,91 @@ router.get("/admin/analytics/purchase-insights", requireAuth, async (req, res) =
   }
 });
 
+// Compares WhatsApp clicks vs completed sales per product
+router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
+  try {
+    const { from, to } = req.query;
+    const dateFilter = {};
+
+    if (from || to) {
+      dateFilter.createdAt = {};
+      if (from) dateFilter.createdAt.$gte = new Date(from);
+      if (to) dateFilter.createdAt.$lte = new Date(to);
+    }
+
+    // Get all click counts grouped by product
+    const clicks = await ActivityLog.aggregate([
+      { $match: { action: "click_intent", ...dateFilter } },
+      {
+        $group: {
+          _id: "$targetId",
+          totalClicks: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Get all completed sales grouped by product
+    const sales = await Order.aggregate([
+      { $match: { status: "completed", ...dateFilter } },
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.productId",
+          productName: { $first: "$items.name" },
+          totalSales: { $sum: "$items.quantity" },
+          totalRevenue: {
+            $sum: { $multiply: ["$items.quantity", "$items.priceAtPurchase"] },
+          },
+        },
+      },
+    ]);
+
+    // Merge both datasets into a single map
+    const productMap = new Map();
+
+    for (const click of clicks) {
+      productMap.set(click._id, {
+        productId: click._id,
+        productName: null,
+        totalClicks: click.totalClicks,
+        totalSales: 0,
+        totalRevenue: 0,
+        conversionRate: "0.00%",
+      });
+    }
+
+    for (const sale of sales) {
+      if (productMap.has(sale._id)) {
+        const entry = productMap.get(sale._id);
+        entry.productName = sale.productName;
+        entry.totalSales = sale.totalSales;
+        entry.totalRevenue = sale.totalRevenue;
+        entry.conversionRate =
+          ((sale.totalSales / entry.totalClicks) * 100).toFixed(2) + "%";
+      } else {
+        productMap.set(sale._id, {
+          productId: sale._id,
+          productName: sale.productName,
+          totalClicks: 0,
+          totalSales: sale.totalSales,
+          totalRevenue: sale.totalRevenue,
+          conversionRate: "N/A",
+        });
+      }
+    }
+
+    const insights = Array.from(productMap.values()).sort(
+      (a, b) => b.totalClicks - a.totalClicks
+    );
+
+    return res.status(200).json({
+      total: insights.length,
+      insights,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Failed to fetch conversion data" });
+  }
+});
+
 export default router;
