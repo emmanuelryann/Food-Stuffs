@@ -1,0 +1,25 @@
+.dashboard-section {
+  margin-top: var(--space-4);
+}
+
+.dashboard-section h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.stat-icon {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-3);
+}
+
+.order-id-cell {
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  color: var(--color-accent);
+}
+
+.date-cell {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}

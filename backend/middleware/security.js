@@ -4,7 +4,6 @@ import { doubleCsrf } from "csrf-csrf";
 import rateLimit from "express-rate-limit";
 
 export const securityMiddleware = (app) => {
-  // Helmet sets various HTTP headers to protect against common web vulnerabilities
   app.use(
     helmet({
       contentSecurityPolicy: {

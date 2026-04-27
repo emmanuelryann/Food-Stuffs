@@ -1,0 +1,95 @@
+.order-id-link {
+  background: none;
+  color: var(--color-accent);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  padding: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.order-id-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.status-select {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.status-select:focus {
+  border-color: var(--color-border-focus);
+}
+
+.row-selected td {
+  background: var(--color-accent-subtle) !important;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.date-cell {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Order Detail Modal */
+.order-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-base);
+}
+
+.detail-row span:first-child {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.items-title {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.order-totals {
+  margin-top: var(--space-4);
+  border-top: 2px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.total-row {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  border-bottom: none;
+}
+
+.total-row span:last-child {
+  color: var(--color-accent);
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}

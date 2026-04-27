@@ -1,0 +1,118 @@
+.product-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image {
+  font-size: var(--font-size-xl);
+  opacity: 0.4;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+.product-id {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: 'Courier New', monospace;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.action-btns {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Modal form grid */
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.modal-form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.product-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.file-input {
+  padding: var(--space-2);
+  cursor: pointer;
+}
+
+.file-input::file-selector-button {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  margin-right: var(--space-3);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-base);
+}
+
+.file-input::file-selector-button:hover {
+  background: var(--color-bg-hover);
+}
+
+.image-preview {
+  margin-top: var(--space-2);
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

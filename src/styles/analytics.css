@@ -1,0 +1,59 @@
+.tab-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.date-filter {
+  min-width: 160px;
+}
+
+.date-filter .input {
+  max-width: none;
+}
+
+.performer-cell {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.target-id {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+}
+
+.details-cell {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.click-count {
+  font-weight: 700;
+  font-size: var(--font-size-md);
+}
+
+.product-name {
+  font-weight: 600;
+}
+
+.product-id {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: 'Courier New', monospace;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.date-cell {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}

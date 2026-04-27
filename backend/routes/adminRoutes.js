@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import AdminSession from "../models/adminSession.js";
-import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
-import { validateSignup, validateLogin, validateChangePassword, validateAdminStatus, handleValidationErrors } from '../middleware/validation.js';
+import { requireAuth } from "../middleware/authentication.js";
+import { validateSignup, validateLogin, validateChangePassword, handleValidationErrors } from '../middleware/validation.js';
 import { logActivity } from '../utils/logActivity.js';
 
 const router = express.Router();

@@ -1,7 +1,9 @@
 import express from "express";
 import StoreSettings from "../models/storeSettings.js";
+import Admin from "../models/admin.js";
+import AdminSession from "../models/adminSession.js";
 import { requireSuperAdmin } from "../middleware/authentication.js";
-import { validateSettings, handleValidationErrors } from "../middleware/validation.js";
+import { validateSettings, validateAdminStatus, handleValidationErrors } from "../middleware/validation.js";
 import { logActivity } from "../utils/logActivity.js";
 
 const router = express.Router();
