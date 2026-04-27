@@ -5,6 +5,7 @@ import StoreSettings from "../models/storeSettings.js";
 import { requireAuth, requireSuperAdmin } from "../middleware/authentication.js";
 import { validateCheckout, validateOrderId, validateOrderStatus, validateBulkDelete, handleValidationErrors } from "../middleware/validation.js";
 import { logActivity } from "../utils/logActivity.js";
+import { checkoutLimiter } from "../middleware/security.js";
 
 const router = express.Router();
 
@@ -61,7 +62,7 @@ function cleanOrder(order) {
   return obj;
 }
 
-router.post("/orders/checkout", validateCheckout, handleValidationErrors, async (req, res) => {
+router.post("/orders/checkout", checkoutLimiter, validateCheckout, handleValidationErrors, async (req, res) => {
   try {
     // Fetch global store settings
     const settings = await StoreSettings.findById("global_settings").lean();

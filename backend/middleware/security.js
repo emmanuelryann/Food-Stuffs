@@ -1,6 +1,8 @@
 import helmet from "helmet";
 import cors from "cors";
 import { doubleCsrf } from "csrf-csrf";
+import rateLimit from "express-rate-limit";
+
 export const securityMiddleware = (app) => {
   // Helmet sets various HTTP headers to protect against common web vulnerabilities
   app.use(
@@ -57,6 +59,10 @@ const doubleCsrfOptions = {
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
   getTokenFromRequest: (req) => req.headers["x-csrf-token"],
+  getSessionIdentifier: (req) => {
+    // Ties the CSRF token to the specific authenticated session
+    return req.cookies.authToken || req.cookies.sessionId || "anonymous";
+  },
 };
 
 export const {
@@ -75,3 +81,37 @@ export const csrfErrorHandler = (error, req, res, next) => {
     next(error);
   }
 };
+
+// Rate Limiting
+export const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests. Please try again in 15 minutes.",
+  },
+});
+
+export const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many authentication attempts. Please try again in 15 minutes.",
+  },
+});
+
+export const checkoutLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many orders placed. Please try again later.",
+  },
+});

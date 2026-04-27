@@ -2,16 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 // import mongoSanitize from 'express-mongo-sanitize';
-import { 
-	securityMiddleware, 
-	corsMiddleware, 
-	doubleCsrfProtection, 
-	generateToken, 
-	csrfErrorHandler 
-} from "./middleware/security.js";
+import { securityMiddleware, corsMiddleware, doubleCsrfProtection, generateToken, csrfErrorHandler, apiLimiter, authLimiter } from "./middleware/security.js";
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
@@ -46,11 +39,11 @@ app.get("/api/csrf-token", (req, res) => {
 	res.json({ csrfToken: token });
 });
 
-app.use("/auth", adminRoutes);
-app.use("/api", productsRoutes);
-app.use("/api", orderRoutes);
-app.use("/api", settingsRoutes);
-app.use("/api", analyticsRoutes);
+app.use("/auth", authLimiter, adminRoutes);
+app.use("/api", apiLimiter, productsRoutes);
+app.use("/api", apiLimiter, orderRoutes);
+app.use("/api", apiLimiter, settingsRoutes);
+app.use("/api", apiLimiter, analyticsRoutes);
 
 app.use(csrfErrorHandler);
 
