@@ -82,6 +82,15 @@ export const csrfErrorHandler = (error, req, res, next) => {
   }
 };
 
+// Force HTTPS middleware for production
+export const httpsRedirect = (req, res, next) => {
+  // Most hosting providers (Render, Heroku, etc.) use the x-forwarded-proto header
+  if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+};
+
 // Rate Limiting
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

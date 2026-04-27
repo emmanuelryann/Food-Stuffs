@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 // import mongoSanitize from 'express-mongo-sanitize';
-import { securityMiddleware, corsMiddleware, doubleCsrfProtection, generateToken, csrfErrorHandler, apiLimiter, authLimiter } from "./middleware/security.js";
+import { securityMiddleware, corsMiddleware, doubleCsrfProtection, generateToken, csrfErrorHandler, apiLimiter, authLimiter, httpsRedirect } from "./middleware/security.js";
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
@@ -18,7 +18,8 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 
-// Security headers (must be first)
+// Security (must be first)
+app.use(httpsRedirect);
 securityMiddleware(app);
 
 // Middleware
