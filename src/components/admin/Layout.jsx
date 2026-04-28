@@ -18,6 +18,7 @@ const navItems = [
 
 function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const admin = JSON.parse(localStorage.getItem('admin') || '{}');
 
@@ -43,7 +44,12 @@ function Layout() {
   });
 
   const handleLogout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
     logoutMutation.mutate();
+    setShowLogoutConfirm(false);
   };
 
   return (
@@ -127,6 +133,41 @@ function Layout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="modal-overlay" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Confirm Logout</h2>
+            </div>
+            <p>Are you sure you want to log out? You will need to sign in again to access the admin dashboard.</p>
+            <div className="modal-actions">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowLogoutConfirm(false)}
+                disabled={logoutMutation.isPending}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={confirmLogout}
+                disabled={logoutMutation.isPending}
+              >
+                {logoutMutation.isPending ? (
+                  <>
+                    <span className="spinner"></span>
+                    Logging out…
+                  </>
+                ) : (
+                  'Logout'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
