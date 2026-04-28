@@ -1,0 +1,103 @@
+/* ============================================
+   WE LOVE TREND SECTION
+   ============================================ */
+
+.we-love-trend {
+  background: var(--clr-neutral-50);
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+}
+
+.trend-container {
+  width: min(90%, 75rem);
+  margin: 0 auto;
+}
+
+.trend-container .section-title {
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.trend-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  justify-content: center;
+}
+
+.trend-card {
+  flex: 1;
+  flex-basis: max(10rem, 20%);
+  max-width: max(12rem, 23%);
+  background: var(--clr-white);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  border: 0.0625rem solid var(--clr-neutral-200);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.trend-card:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+}
+
+.trend-card-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--clr-green-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trend-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.trend-card:hover .trend-card-image img {
+  transform: scale(1.05);
+}
+
+.trend-card-info {
+  padding: clamp(0.5rem, 1vw, 0.875rem);
+  text-align: center;
+}
+
+.trend-card-info h3 {
+  font-family: var(--ff-heading);
+  font-size: clamp(0.8125rem, 0.9vw, 0.9375rem);
+  font-weight: 600;
+  color: var(--clr-neutral-900);
+  margin-bottom: clamp(0.125rem, 0.3vw, 0.25rem);
+}
+
+.trend-stars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  margin-bottom: clamp(0.125rem, 0.3vw, 0.25rem);
+}
+
+.trend-price {
+  font-size: clamp(0.75rem, 0.85vw, 0.875rem);
+  color: var(--clr-green-600);
+  font-weight: 600;
+}
+
+/* --- Responsive --- */
+@media (max-width: 48rem) {
+  .trend-card {
+    flex-basis: max(9rem, 45%);
+    max-width: max(12rem, 48%);
+  }
+}
+
+@media (max-width: 30rem) {
+  .trend-card {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}

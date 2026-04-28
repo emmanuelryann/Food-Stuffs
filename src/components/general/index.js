@@ -1,0 +1,14 @@
+// Export all components from the general folder
+export { default as Header } from './Header';
+export { default as HeroSection } from './HeroSection';
+export { default as FeatureIcons } from './FeatureIcons';
+export { default as WeLoveTrend } from './WeLoveTrend';
+export { default as WhyChooseUs } from './WhyChooseUs';
+export { default as BannerSection } from './BannerSection';
+export { default as TrendingProducts } from './TrendingProducts';
+export { default as ClientTestimonials } from './ClientTestimonials';
+export { default as SpecialDiscount } from './SpecialDiscount';
+export { default as LatestBlog } from './LatestBlog';
+export { default as Newsletter } from './Newsletter';
+export { default as Footer } from './Footer';
+export { default as LandingPage } from './LandingPage';

@@ -1,0 +1,134 @@
+/* ============================================
+   WHY CHOOSE US
+   ============================================ */
+
+.why-choose-us {
+  background: var(--clr-white);
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+}
+
+.why-container {
+  width: min(90%, 75rem);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+.why-content {
+  flex: 1;
+  flex-basis: 50%;
+}
+
+.why-title {
+  font-family: var(--ff-heading);
+  font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem);
+  font-weight: 700;
+  color: var(--clr-neutral-900);
+  margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.why-subtitle {
+  font-size: clamp(0.8125rem, 0.9vw, 0.9375rem);
+  color: var(--clr-neutral-600);
+  line-height: 1.7;
+  margin-bottom: clamp(1.25rem, 2vw, 2rem);
+  max-width: max(90%, 20rem);
+}
+
+.reasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reason-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.reason-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  background: var(--clr-green-500);
+  color: var(--clr-white);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.reason-text h4 {
+  font-family: var(--ff-heading);
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  font-weight: 600;
+  color: var(--clr-neutral-900);
+  margin-bottom: clamp(0.0625rem, 0.2vw, 0.125rem);
+}
+
+.reason-text p {
+  font-size: clamp(0.75rem, 0.85vw, 0.875rem);
+  color: var(--clr-neutral-500);
+  line-height: 1.5;
+}
+
+/* Image Side */
+.why-image-wrapper {
+  flex: 1;
+  flex-basis: 45%;
+  flex-shrink: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-image-bg {
+  position: absolute;
+  width: 80%;
+  height: 90%;
+  background: var(--clr-green-100);
+  border-radius: 1.5rem;
+  z-index: 0;
+  top: 5%;
+  right: 0;
+}
+
+.why-image {
+  position: relative;
+  z-index: 1;
+  width: 85%;
+  max-width: max(16rem, 25vw);
+  height: auto;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+/* --- Responsive --- */
+@media (max-width: 48rem) {
+  .why-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .why-content {
+    flex-basis: auto;
+  }
+
+  .why-subtitle {
+    max-width: 100%;
+  }
+
+  .reason-item {
+    justify-content: center;
+    text-align: left;
+  }
+
+  .why-image-wrapper {
+    flex-basis: auto;
+  }
+}
