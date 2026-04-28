@@ -144,9 +144,16 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
       if (to) dateFilter.createdAt.$lte = new Date(to);
     }
 
-    // Get all click counts grouped by product
+    // 1. Get all click counts grouped by product (handling both string and array targetId)
     const clicks = await ActivityLog.aggregate([
       { $match: { action: "click_intent", ...dateFilter } },
+      // Unwind targetId in case it's an array of product IDs
+      { 
+        $unwind: {
+          path: "$targetId",
+          preserveNullAndEmptyArrays: false
+        }
+      },
       {
         $group: {
           _id: "$targetId",
@@ -155,7 +162,7 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
       },
     ]);
 
-    // Get all completed sales grouped by product
+    // 2. Get all completed sales grouped by product
     const sales = await Order.aggregate([
       { $match: { status: "completed", ...dateFilter } },
       { $unwind: "$items" },
@@ -171,13 +178,22 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
       },
     ]);
 
-    // Merge both datasets into a single map
+    // 3. Get all product names from the Product collection to ensure names show up for clicks with no sales
+    const Product = (await import("../models/product.js")).default;
+    const allProducts = await Product.find({}).select("productId name").lean();
+    const nameMap = new Map(allProducts.map(p => [p.productId, p.name]));
+
+    // 4. Merge datasets
     const productMap = new Map();
 
     for (const click of clicks) {
-      productMap.set(click._id, {
-        productId: click._id,
-        productName: null,
+      const productId = String(click._id);
+      const productName = nameMap.get(productId);
+      if (!productName) continue; // Skip deleted products
+
+      productMap.set(productId, {
+        productId,
+        productName,
         totalClicks: click.totalClicks,
         totalSales: 0,
         totalRevenue: 0,
@@ -186,17 +202,20 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
     }
 
     for (const sale of sales) {
-      if (productMap.has(sale._id)) {
-        const entry = productMap.get(sale._id);
-        entry.productName = sale.productName;
+      const productId = String(sale._id);
+      const productName = nameMap.get(productId);
+      if (!productName) continue; // Skip deleted products
+
+      if (productMap.has(productId)) {
+        const entry = productMap.get(productId);
         entry.totalSales = sale.totalSales;
         entry.totalRevenue = sale.totalRevenue;
         entry.conversionRate =
           ((sale.totalSales / entry.totalClicks) * 100).toFixed(2) + "%";
       } else {
-        productMap.set(sale._id, {
-          productId: sale._id,
-          productName: sale.productName,
+        productMap.set(productId, {
+          productId,
+          productName,
           totalClicks: 0,
           totalSales: sale.totalSales,
           totalRevenue: sale.totalRevenue,
@@ -206,7 +225,7 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
     }
 
     const insights = Array.from(productMap.values()).sort(
-      (a, b) => b.totalClicks - a.totalClicks
+      (a, b) => (b.totalSales || 0) - (a.totalSales || 0) || b.totalClicks - a.totalClicks
     );
 
     return res.status(200).json({
@@ -214,7 +233,7 @@ router.get("/admin/analytics/conversion", requireAuth, async (req, res) => {
       insights,
     });
   } catch (error) {
-    console.error(error.message);
+    console.error("Conversion Analytics Error:", error.message);
     return res.status(500).json({ message: "Failed to fetch conversion data" });
   }
 });

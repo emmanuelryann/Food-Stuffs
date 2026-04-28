@@ -47,6 +47,8 @@ function Analytics() {
   });
 
   const { data: conversionData, isLoading: loadingConversion } = useQuery({
+    queryKey: ['conversion', dateFrom, dateTo],
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/conversion${buildDateParams()}`),
     enabled: activeTab === 'conversion',
   });
 
