@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Products from './components/Products';
-import Orders from './components/Orders';
-import Settings from './components/Settings';
-import Analytics from './components/Analytics';
-import ChangePassword from './components/ChangePassword';
-import AdminManagement from './components/AdminManagement';
+import Layout from './components/admin/Layout';
+import ProtectedRoute from './components/admin/ProtectedRoute';
+import Login from './components/admin/Login';
+import Dashboard from './components/admin/Dashboard';
+import Products from './components/admin/Products';
+import Orders from './components/admin/Orders';
+import Settings from './components/admin/Settings';
+import Analytics from './components/admin/Analytics';
+import ChangePassword from './components/admin/ChangePassword';
+import AdminManagement from './components/admin/AdminManagement';
 
 function App() {
   return (

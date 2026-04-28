@@ -1,23 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/dashboard.css';
+import '../../styles/admin/dashboard.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const fetchWithAuth = async (url) => {
+  const res = await fetch(url, { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch');
+  return res.json();
+};
 
 function Dashboard() {
   const { data: products, isLoading: loadingProducts } = useQuery({
     queryKey: ['products'],
-    queryFn: () => apiFetch(`${API}/api/products`),
+    queryFn: () => fetchWithAuth(`${API}/api/products`),
   });
 
   const { data: orders, isLoading: loadingOrders } = useQuery({
     queryKey: ['orders'],
-    queryFn: () => apiFetch(`${API}/api/orders`),
+    queryFn: () => fetchWithAuth(`${API}/api/orders`),
   });
 
   const { data: clickData, isLoading: loadingClicks } = useQuery({
     queryKey: ['click-insights'],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/click-insights`),
+    queryFn: () => fetchWithAuth(`${API}/api/admin/analytics/click-insights`),
   });
 
   const isLoading = loadingProducts || loadingOrders || loadingClicks;

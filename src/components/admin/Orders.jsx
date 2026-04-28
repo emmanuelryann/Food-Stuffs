@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/orders.css';
+import '../../styles/admin/orders.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const fetchWithAuth = async (url, options = {}) => {
+  const res = await fetch(url, { credentials: 'include', ...options });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Request failed');
+  return data;
+};
 
 function Orders() {
   const queryClient = useQueryClient();
@@ -22,12 +28,12 @@ function Orders() {
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders'],
-    queryFn: () => apiFetch(`${API}/api/orders`),
+    queryFn: () => fetchWithAuth(`${API}/api/orders`),
   });
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
-      return apiFetch(`${API}/api/orders/${id}/status`, {
+      return fetchWithAuth(`${API}/api/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -42,7 +48,7 @@ function Orders() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return apiFetch(`${API}/api/orders/${id}`, { method: 'DELETE' });
+      return fetchWithAuth(`${API}/api/orders/${id}`, { method: 'DELETE' });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
@@ -54,7 +60,7 @@ function Orders() {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async (orderIds) => {
-      return apiFetch(`${API}/api/orders/bulk-delete`, {
+      return fetchWithAuth(`${API}/api/orders/bulk-delete`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderIds }),
@@ -122,7 +128,13 @@ function Orders() {
       </div>
 
       <div className="toolbar">
-        <input type="text" className="input" placeholder="Search by order ID or customer…" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input
+          type="text"
+          className="input"
+          placeholder="Search by order ID or customer…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">All Statuses</option>
           <option value="pending">Pending</option>
@@ -141,7 +153,13 @@ function Orders() {
           <table className="table">
             <thead>
               <tr>
-                <th><input type="checkbox" checked={selectedOrders.length === filtered.length && filtered.length > 0} onChange={toggleSelectAll} /></th>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selectedOrders.length === filtered.length && filtered.length > 0}
+                    onChange={toggleSelectAll}
+                  />
+                </th>
                 <th>Order ID</th>
                 <th>Customer</th>
                 <th>Items</th>
@@ -154,9 +172,18 @@ function Orders() {
             <tbody>
               {filtered.map((order) => (
                 <tr key={order.orderId} className={selectedOrders.includes(order.orderId) ? 'row-selected' : ''}>
-                  <td><input type="checkbox" checked={selectedOrders.includes(order.orderId)} onChange={() => toggleSelect(order.orderId)} /></td>
                   <td>
-                    <button className="order-id-link" onClick={() => setExpandedOrder(expandedOrder === order.orderId ? null : order.orderId)}>
+                    <input
+                      type="checkbox"
+                      checked={selectedOrders.includes(order.orderId)}
+                      onChange={() => toggleSelect(order.orderId)}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      className="order-id-link"
+                      onClick={() => setExpandedOrder(expandedOrder === order.orderId ? null : order.orderId)}
+                    >
                       {order.orderId}
                     </button>
                   </td>
@@ -164,14 +191,21 @@ function Orders() {
                   <td>{order.items.length} item(s)</td>
                   <td className="price-cell">${order.totalAmount.toFixed(2)}</td>
                   <td>
-                    <select className="status-select" value={order.status} onChange={(e) => statusMutation.mutate({ id: order.orderId, status: e.target.value })} disabled={statusMutation.isPending}>
+                    <select
+                      className="status-select"
+                      value={order.status}
+                      onChange={(e) => statusMutation.mutate({ id: order.orderId, status: e.target.value })}
+                      disabled={statusMutation.isPending}
+                    >
                       <option value="pending">Pending</option>
                       <option value="completed">Completed</option>
                       <option value="cancelled">Cancelled</option>
                     </select>
                   </td>
                   <td className="date-cell">{new Date(order.createdAt).toLocaleDateString()}</td>
-                  <td><button className="btn btn-danger btn-sm" onClick={() => setDeleteConfirm(order)}>Delete</button></td>
+                  <td>
+                    <button className="btn btn-danger btn-sm" onClick={() => setDeleteConfirm(order)}>Delete</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -179,6 +213,7 @@ function Orders() {
         </div>
       )}
 
+      {/* Expanded Order Detail */}
       {expandedOrder && (
         <div className="modal-overlay" onClick={() => setExpandedOrder(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -199,7 +234,9 @@ function Orders() {
                   <h3 className="items-title">Items</h3>
                   <div className="table-container">
                     <table className="table">
-                      <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+                      <thead>
+                        <tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr>
+                      </thead>
                       <tbody>
                         {order.items.map((item, i) => (
                           <tr key={i}>
@@ -223,6 +260,7 @@ function Orders() {
         </div>
       )}
 
+      {/* Delete Confirmation */}
       {deleteConfirm && (
         <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -230,7 +268,11 @@ function Orders() {
             <p>Are you sure you want to delete order <strong>{deleteConfirm.orderId}</strong>?</p>
             <div className="modal-actions">
               <button className="btn btn-secondary" onClick={() => setDeleteConfirm(null)}>Cancel</button>
-              <button className="btn btn-danger" onClick={() => deleteMutation.mutate(deleteConfirm.orderId)} disabled={deleteMutation.isPending}>
+              <button
+                className="btn btn-danger"
+                onClick={() => deleteMutation.mutate(deleteConfirm.orderId)}
+                disabled={deleteMutation.isPending}
+              >
                 {deleteMutation.isPending ? 'Deleting…' : 'Delete'}
               </button>
             </div>
@@ -238,6 +280,7 @@ function Orders() {
         </div>
       )}
 
+      {/* Bulk Delete Confirmation */}
       {bulkDeleteConfirm && (
         <div className="modal-overlay" onClick={() => setBulkDeleteConfirm(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -245,7 +288,11 @@ function Orders() {
             <p>Are you sure you want to delete <strong>{selectedOrders.length}</strong> order(s)? This action cannot be undone.</p>
             <div className="modal-actions">
               <button className="btn btn-secondary" onClick={() => setBulkDeleteConfirm(false)}>Cancel</button>
-              <button className="btn btn-danger" onClick={() => bulkDeleteMutation.mutate(selectedOrders)} disabled={bulkDeleteMutation.isPending}>
+              <button
+                className="btn btn-danger"
+                onClick={() => bulkDeleteMutation.mutate(selectedOrders)}
+                disabled={bulkDeleteMutation.isPending}
+              >
                 {bulkDeleteMutation.isPending ? 'Deleting…' : `Delete ${selectedOrders.length} Orders`}
               </button>
             </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/adminmanagement.css';
+import '../../styles/admin/adminmanagement.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -24,11 +23,15 @@ function AdminManagement() {
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
-      return apiFetch(`${API}/api/admin/${id}/status`, {
+      const res = await fetch(`${API}/api/admin/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ status }),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to update status');
+      return data;
     },
     onSuccess: (data) => {
       showToast(data.message || 'Admin status updated');
