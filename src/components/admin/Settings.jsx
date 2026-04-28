@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/settings.css';
+import { fetchJsonWithAuth } from '../../utils/api';
+import '../../styles/admin/settings.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -24,7 +24,7 @@ function Settings() {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['settings'],
-    queryFn: () => apiFetch(`${API}/api/settings`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function Settings() {
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      return apiFetch(`${API}/api/settings`, {
+      return fetchJsonWithAuth(`${API}/api/settings`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

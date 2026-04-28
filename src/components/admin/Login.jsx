@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { fetchCsrfToken, apiFetch } from '../utils/api';
-import '../styles/login.css';
+import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
+import '../../styles/admin/login.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -12,20 +12,20 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Fetch CSRF token on mount so it's ready for the login request
-  useEffect(() => {
-    fetchCsrfToken();
-  }, []);
-
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
-      return apiFetch(`${API}/auth/login`, {
+      const res = await fetchWithAuth(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+      return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Re-fetch CSRF token to sync with the new authenticated session cookie
+      await fetchCsrfToken();
       localStorage.setItem('admin', JSON.stringify(data.admin));
       navigate('/');
     },

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/layout.css';
+import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
+import '../../styles/admin/layout.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -22,13 +22,20 @@ function Layout() {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      return apiFetch(`${API}/auth/logout`, { method: 'POST' });
+      const res = await fetchWithAuth(`${API}/auth/logout`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error('Logout failed');
+      return res.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Fetch a new anonymous token after logout
+      await fetchCsrfToken();
       localStorage.removeItem('admin');
       navigate('/login');
     },
-    onError: () => {
+    onError: async () => {
+      await fetchCsrfToken();
       localStorage.removeItem('admin');
       navigate('/login');
     },
@@ -40,14 +47,22 @@ function Layout() {
 
   return (
     <div className="layout">
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
       )}
 
+      {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <h2 className="sidebar-logo">🍔 Food Stuffs</h2>
-          <button className="sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">✕</button>
+          <button
+            className="sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
         </div>
 
         <nav className="sidebar-nav">
@@ -77,10 +92,18 @@ function Layout() {
         </div>
       </aside>
 
+      {/* Main content area */}
       <div className="main-wrapper">
+        {/* Topbar */}
         <header className="topbar">
-          <button className="hamburger" onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
-            <span></span><span></span><span></span>
+          <button
+            className="hamburger"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open sidebar"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
 
           <div className="topbar-right">
@@ -88,12 +111,17 @@ function Layout() {
               <span className="admin-name">{admin.name || 'Admin'}</span>
               <span className="admin-role badge badge-info">{admin.role || 'admin'}</span>
             </div>
-            <button className="btn btn-ghost btn-sm" onClick={handleLogout} disabled={logoutMutation.isPending}>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+            >
               {logoutMutation.isPending ? 'Logging out…' : 'Logout'}
             </button>
           </div>
         </header>
 
+        {/* Page content */}
         <main className="main-content">
           <Outlet />
         </main>

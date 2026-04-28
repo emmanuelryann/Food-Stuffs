@@ -1,23 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/dashboard.css';
+import { fetchJsonWithAuth } from '../../utils/api';
+import '../../styles/admin/dashboard.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function Dashboard() {
   const { data: products, isLoading: loadingProducts } = useQuery({
     queryKey: ['products'],
-    queryFn: () => apiFetch(`${API}/api/products`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/products`),
   });
 
   const { data: orders, isLoading: loadingOrders } = useQuery({
     queryKey: ['orders'],
-    queryFn: () => apiFetch(`${API}/api/orders`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/orders`),
   });
 
   const { data: clickData, isLoading: loadingClicks } = useQuery({
     queryKey: ['click-insights'],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/click-insights`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/click-insights`),
   });
 
   const isLoading = loadingProducts || loadingOrders || loadingClicks;

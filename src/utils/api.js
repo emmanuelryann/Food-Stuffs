@@ -2,7 +2,8 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 let csrfToken = null;
 
-export async function fetchCsrfToken() {
+// Fetches a new CSRF token and stores it in memory
+export const fetchCsrfToken = async () => {
   try {
     const res = await fetch(`${API}/api/csrf-token`, { credentials: 'include' });
     if (!res.ok) throw new Error('Failed to fetch CSRF token');
@@ -10,61 +11,47 @@ export async function fetchCsrfToken() {
     csrfToken = data.csrfToken;
     return csrfToken;
   } catch (err) {
-    console.error('CSRF token fetch error:', err);
+    console.error('Error fetching CSRF token:', err);
     return null;
   }
-}
+};
 
-export function getCsrfToken() {
-  return csrfToken;
-}
+// Global fetch wrapper that attaches credentials and CSRF token
+export const fetchWithAuth = async (url, options = {}) => {
+  // Add credentials to all requests
+  const authOptions = {
+    ...options,
+    credentials: 'include',
+    headers: {
+      ...options.headers,
+    },
+  };
 
-/**
- * Authenticated fetch wrapper that auto-includes credentials and CSRF token.
- * For GET requests, only credentials are sent.
- * For mutating requests (POST, PATCH, PUT, DELETE), the CSRF token header is added.
- */
-export async function apiFetch(url, options = {}) {
+  // If the request mutates state, attach the CSRF token
   const method = (options.method || 'GET').toUpperCase();
-
-  const headers = { ...options.headers };
-
-  // Add CSRF token for mutating requests
-  if (['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    // If we don't have a token, try to get one first
     if (!csrfToken) {
       await fetchCsrfToken();
     }
+    
     if (csrfToken) {
-      headers['x-csrf-token'] = csrfToken;
+      authOptions.headers['x-csrf-token'] = csrfToken;
     }
   }
 
-  const res = await fetch(url, {
-    ...options,
-    credentials: 'include',
-    headers,
-  });
+  const res = await fetch(url, authOptions);
+  return res;
+};
 
-  // If we get a 403 with CSRF error, try refreshing the token once and retry
-  if (res.status === 403) {
-    const errorData = await res.clone().json().catch(() => ({}));
-    if (errorData.message?.toLowerCase().includes('csrf')) {
-      await fetchCsrfToken();
-      if (csrfToken) {
-        headers['x-csrf-token'] = csrfToken;
-        const retryRes = await fetch(url, {
-          ...options,
-          credentials: 'include',
-          headers,
-        });
-        const retryData = await retryRes.json();
-        if (!retryRes.ok) throw new Error(retryData.message || 'Request failed');
-        return retryData;
-      }
-    }
-  }
-
+// Helper for making JSON requests
+export const fetchJsonWithAuth = async (url, options = {}) => {
+  const res = await fetchWithAuth(url, options);
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  
+  if (!res.ok) {
+    throw new Error(data.message || 'Request failed');
+  }
+  
   return data;
-}
+};

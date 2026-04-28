@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/changepassword.css';
+import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
+import '../../styles/admin/changepassword.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -18,16 +18,20 @@ function ChangePassword() {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      return apiFetch(`${API}/auth/change-password`, {
+      const res = await fetchWithAuth(`${API}/auth/change-password`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message || 'Failed to change password');
+      return result;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setSuccess(data.message || 'Password changed successfully. Redirecting to login…');
       setError('');
       setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      await fetchCsrfToken(); // fetch an anonymous token before redirecting
       setTimeout(() => {
         localStorage.removeItem('admin');
         navigate('/login');

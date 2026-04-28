@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 // import mongoSanitize from 'express-mongo-sanitize';
-import { securityMiddleware, corsMiddleware, doubleCsrfProtection, generateToken, csrfErrorHandler, apiLimiter, authLimiter, httpsRedirect } from "./middleware/security.js";
+import { securityMiddleware, corsMiddleware, doubleCsrfProtection, generateCsrfToken, csrfErrorHandler, apiLimiter, authLimiter, httpsRedirect } from "./middleware/security.js";
 import connectDB from "./config/db.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
@@ -36,7 +36,7 @@ connectDB();
 
 // Routes
 app.get("/api/csrf-token", (req, res) => {
-	const token = generateToken(res, req);
+	const token = generateCsrfToken(req, res);
 	res.json({ csrfToken: token });
 });
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '../utils/api';
-import '../styles/analytics.css';
+import { fetchJsonWithAuth } from '../../utils/api';
+import '../../styles/admin/analytics.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -26,25 +26,25 @@ function Analytics() {
 
   const { data: activityData, isLoading: loadingActivity } = useQuery({
     queryKey: ['activity-logs', dateFrom, dateTo],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/activity-logs${buildDateParams()}`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/activity-logs${buildDateParams()}`),
     enabled: activeTab === 'activity',
   });
 
   const { data: clickData, isLoading: loadingClicks } = useQuery({
     queryKey: ['click-insights', dateFrom, dateTo],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/click-insights${buildDateParams()}`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/click-insights${buildDateParams()}`),
     enabled: activeTab === 'clicks',
   });
 
   const { data: purchaseData, isLoading: loadingPurchases } = useQuery({
     queryKey: ['purchase-insights', dateFrom, dateTo],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/purchase-insights${buildDateParams()}`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/purchase-insights${buildDateParams()}`),
     enabled: activeTab === 'purchases',
   });
 
   const { data: conversionData, isLoading: loadingConversion } = useQuery({
     queryKey: ['conversion', dateFrom, dateTo],
-    queryFn: () => apiFetch(`${API}/api/admin/analytics/conversion${buildDateParams()}`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/conversion${buildDateParams()}`),
     enabled: activeTab === 'conversion',
   });
 

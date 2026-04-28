@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, getCsrfToken, fetchCsrfToken } from '../utils/api';
-import '../styles/products.css';
+import { fetchWithAuth } from '../../utils/api';
+import '../../styles/admin/products.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const IMAGEKIT_URL = import.meta.env.VITE_IMAGEKIT_URL || 'https://ik.imagekit.io/your_id';
 const IMAGEKIT_PUBLIC_KEY = import.meta.env.VITE_IMAGEKIT_PUBLIC || '';
 
 function Products() {
@@ -29,17 +30,21 @@ function Products() {
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
-    queryFn: () => apiFetch(`${API}/api/products`),
+    queryFn: async () => {
+      const res = await fetchWithAuth(`${API}/api/products`);
+      return res.json();
+    },
   });
 
   const uploadToImageKit = async (file) => {
-    const sigRes = await fetch(
-      `${API}/api/product/upload-signature?fileSize=${file.size}&fileType=${file.type}`,
-      { credentials: 'include' }
+    // Step 1: Get auth signature from backend
+    const sigRes = await fetchWithAuth(
+      `${API}/api/product/upload-signature?fileSize=${file.size}&fileType=${file.type}`
     );
     if (!sigRes.ok) throw new Error('Failed to get upload signature');
     const { signature, expire, token } = await sigRes.json();
 
+    // Step 2: Upload to ImageKit
     const formData = new FormData();
     formData.append('file', file);
     formData.append('publicKey', IMAGEKIT_PUBLIC_KEY);
@@ -60,11 +65,16 @@ function Products() {
 
   const createMutation = useMutation({
     mutationFn: async (productData) => {
-      return apiFetch(`${API}/api/product`, {
+      const res = await fetchWithAuth(`${API}/api/product`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productData),
       });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -76,11 +86,16 @@ function Products() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }) => {
-      return apiFetch(`${API}/api/product/${id}`, {
+      const res = await fetchWithAuth(`${API}/api/product/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -92,7 +107,12 @@ function Products() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return apiFetch(`${API}/api/product/${id}`, { method: 'DELETE' });
+      const res = await fetchWithAuth(`${API}/api/product/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -267,6 +287,7 @@ function Products() {
         </div>
       )}
 
+      {/* Create/Edit Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -279,34 +300,88 @@ function Products() {
               <div className="modal-form-grid">
                 <div className="input-group">
                   <label htmlFor="prod-name">Product Name</label>
-                  <input id="prod-name" className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+                  <input
+                    id="prod-name"
+                    className="input"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                  />
                 </div>
+
                 <div className="input-group">
                   <label htmlFor="prod-category">Category</label>
-                  <input id="prod-category" className="input" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
+                  <input
+                    id="prod-category"
+                    className="input"
+                    value={form.category}
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    required
+                  />
                 </div>
+
                 <div className="input-group">
                   <label htmlFor="prod-price">Price</label>
-                  <input id="prod-price" type="number" step="0.01" min="0" className="input" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+                  <input
+                    id="prod-price"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className="input"
+                    value={form.price}
+                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    required
+                  />
                 </div>
+
                 <div className="input-group">
                   <label htmlFor="prod-stock">Stock Count</label>
-                  <input id="prod-stock" type="number" min="0" className="input" value={form.countInStock} onChange={(e) => setForm({ ...form, countInStock: e.target.value })} required />
+                  <input
+                    id="prod-stock"
+                    type="number"
+                    min="0"
+                    className="input"
+                    value={form.countInStock}
+                    onChange={(e) => setForm({ ...form, countInStock: e.target.value })}
+                    required
+                  />
                 </div>
+
                 <div className="input-group full-width">
                   <label htmlFor="prod-desc">Description</label>
-                  <textarea id="prod-desc" className="input product-textarea" rows="3" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required></textarea>
+                  <textarea
+                    id="prod-desc"
+                    className="input product-textarea"
+                    rows="3"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    required
+                  ></textarea>
                 </div>
+
                 <div className="input-group full-width">
                   <label htmlFor="prod-image">Product Image</label>
-                  <input id="prod-image" type="file" accept="image/*" className="input file-input" onChange={handleImageChange} />
+                  <input
+                    id="prod-image"
+                    type="file"
+                    accept="image/*"
+                    className="input file-input"
+                    onChange={handleImageChange}
+                  />
                   {imagePreview && (
-                    <div className="image-preview"><img src={imagePreview} alt="Preview" /></div>
+                    <div className="image-preview">
+                      <img src={imagePreview} alt="Preview" />
+                    </div>
                   )}
                 </div>
+
                 <div className="input-group">
                   <label className="toggle-label">
-                    <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />
+                    <input
+                      type="checkbox"
+                      checked={form.isActive}
+                      onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                    />
                     <span>Product is active</span>
                   </label>
                 </div>
@@ -315,7 +390,14 @@ function Products() {
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
                 <button type="submit" className="btn btn-primary" disabled={isSaving}>
-                  {isSaving ? (<><span className="spinner"></span>{uploading ? 'Uploading…' : 'Saving…'}</>) : (editingProduct ? 'Update Product' : 'Create Product')}
+                  {isSaving ? (
+                    <>
+                      <span className="spinner"></span>
+                      {uploading ? 'Uploading…' : 'Saving…'}
+                    </>
+                  ) : (
+                    editingProduct ? 'Update Product' : 'Create Product'
+                  )}
                 </button>
               </div>
             </form>
@@ -323,14 +405,21 @@ function Products() {
         </div>
       )}
 
+      {/* Delete Confirmation */}
       {deleteConfirm && (
         <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header"><h2>Delete Product</h2></div>
+            <div className="modal-header">
+              <h2>Delete Product</h2>
+            </div>
             <p>Are you sure you want to delete <strong>{deleteConfirm.name}</strong>? This action cannot be undone.</p>
             <div className="modal-actions">
               <button className="btn btn-secondary" onClick={() => setDeleteConfirm(null)}>Cancel</button>
-              <button className="btn btn-danger" onClick={() => deleteMutation.mutate(deleteConfirm.productId)} disabled={deleteMutation.isPending}>
+              <button
+                className="btn btn-danger"
+                onClick={() => deleteMutation.mutate(deleteConfirm.productId)}
+                disabled={deleteMutation.isPending}
+              >
                 {deleteMutation.isPending ? 'Deleting…' : 'Delete'}
               </button>
             </div>
