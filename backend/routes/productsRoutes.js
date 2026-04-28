@@ -101,7 +101,8 @@ router.post("/product", requireAuth, validateProduct, handleValidationErrors, as
 
 router.get("/products", async (req, res) => {
   try {
-    const products = await Product.find({ isActive: true })
+    const query = req.query.view === 'admin' ? {} : { isActive: true };
+    const products = await Product.find(query)
     .sort({ createdAt: -1 })
     .select("-__v -_id")
     .lean();

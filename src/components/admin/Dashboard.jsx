@@ -7,7 +7,7 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 function Dashboard() {
   const { data: products, isLoading: loadingProducts } = useQuery({
     queryKey: ['products'],
-    queryFn: () => fetchJsonWithAuth(`${API}/api/products`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/products?view=admin`),
   });
 
   const { data: orders, isLoading: loadingOrders } = useQuery({

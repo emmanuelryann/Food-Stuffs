@@ -31,7 +31,7 @@ function Products() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const res = await fetchWithAuth(`${API}/api/products`);
+      const res = await fetchWithAuth(`${API}/api/products?view=admin`);
       return res.json();
     },
   });
