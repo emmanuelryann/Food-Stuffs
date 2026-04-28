@@ -66,7 +66,7 @@ const doubleCsrfOptions = {
 
 export const {
   invalidCsrfTokenError,
-  generateToken,
+  generateCsrfToken,
   doubleCsrfProtection,
 } = doubleCsrf(doubleCsrfOptions);
 

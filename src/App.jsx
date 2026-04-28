@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/admin/Layout';
 import ProtectedRoute from './components/admin/ProtectedRoute';
@@ -9,8 +10,13 @@ import Settings from './components/admin/Settings';
 import Analytics from './components/admin/Analytics';
 import ChangePassword from './components/admin/ChangePassword';
 import AdminManagement from './components/admin/AdminManagement';
+import { fetchCsrfToken } from './utils/api';
 
 function App() {
+  useEffect(() => {
+    fetchCsrfToken();
+  }, []);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

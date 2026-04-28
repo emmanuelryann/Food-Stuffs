@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchWithAuth } from '../../utils/api';
 import '../../styles/admin/adminmanagement.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -23,10 +24,9 @@ function AdminManagement() {
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
-      const res = await fetch(`${API}/api/admin/${id}/status`, {
+      const res = await fetchWithAuth(`${API}/api/admin/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ status }),
       });
       const data = await res.json();

@@ -1,15 +1,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchWithAuth } from '../../utils/api';
 import '../../styles/admin/orders.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-const fetchWithAuth = async (url, options = {}) => {
-  const res = await fetch(url, { credentials: 'include', ...options });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
-};
 
 function Orders() {
   const queryClient = useQueryClient();
@@ -28,16 +22,24 @@ function Orders() {
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders'],
-    queryFn: () => fetchWithAuth(`${API}/api/orders`),
+    queryFn: async () => {
+      const res = await fetchWithAuth(`${API}/api/orders`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    },
   });
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
-      return fetchWithAuth(`${API}/api/orders/${id}/status`, {
+      const res = await fetchWithAuth(`${API}/api/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
@@ -48,7 +50,10 @@ function Orders() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return fetchWithAuth(`${API}/api/orders/${id}`, { method: 'DELETE' });
+      const res = await fetchWithAuth(`${API}/api/orders/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
@@ -60,11 +65,14 @@ function Orders() {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async (orderIds) => {
-      return fetchWithAuth(`${API}/api/orders/bulk-delete`, {
+      const res = await fetchWithAuth(`${API}/api/orders/bulk-delete`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderIds }),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });

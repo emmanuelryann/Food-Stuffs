@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchJsonWithAuth } from '../../utils/api';
 import '../../styles/admin/settings.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-const fetchWithAuth = async (url, options = {}) => {
-  const res = await fetch(url, { credentials: 'include', ...options });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
-};
 
 function Settings() {
   const queryClient = useQueryClient();
@@ -30,7 +24,7 @@ function Settings() {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['settings'],
-    queryFn: () => fetchWithAuth(`${API}/api/settings`),
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
   });
 
   useEffect(() => {
@@ -48,7 +42,7 @@ function Settings() {
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      return fetchWithAuth(`${API}/api/settings`, {
+      return fetchJsonWithAuth(`${API}/api/settings`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

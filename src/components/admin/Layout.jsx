@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
 import '../../styles/admin/layout.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -21,18 +22,20 @@ function Layout() {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`${API}/auth/logout`, {
+      const res = await fetchWithAuth(`${API}/auth/logout`, {
         method: 'POST',
-        credentials: 'include',
       });
       if (!res.ok) throw new Error('Logout failed');
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Fetch a new anonymous token after logout
+      await fetchCsrfToken();
       localStorage.removeItem('admin');
       navigate('/login');
     },
-    onError: () => {
+    onError: async () => {
+      await fetchCsrfToken();
       localStorage.removeItem('admin');
       navigate('/login');
     },

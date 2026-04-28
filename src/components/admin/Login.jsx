@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
 import '../../styles/admin/login.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -13,17 +14,18 @@ function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
-      const res = await fetch(`${API}/auth/login`, {
+      const res = await fetchWithAuth(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(credentials),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Re-fetch CSRF token to sync with the new authenticated session cookie
+      await fetchCsrfToken();
       localStorage.setItem('admin', JSON.stringify(data.admin));
       navigate('/');
     },

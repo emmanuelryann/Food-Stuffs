@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchWithAuth } from '../../utils/api';
 import '../../styles/admin/products.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const IMAGEKIT_URL = import.meta.env.VITE_IMAGEKIT_URL || 'https://ik.imagekit.io/your_id';
 const IMAGEKIT_PUBLIC_KEY = import.meta.env.VITE_IMAGEKIT_PUBLIC || '';
-
-const fetchWithAuth = async (url, options = {}) => {
-  const res = await fetch(url, { credentials: 'include', ...options });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
-};
 
 function Products() {
   const queryClient = useQueryClient();
@@ -36,14 +30,16 @@ function Products() {
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
-    queryFn: () => fetchWithAuth(`${API}/api/products`),
+    queryFn: async () => {
+      const res = await fetchWithAuth(`${API}/api/products`);
+      return res.json();
+    },
   });
 
   const uploadToImageKit = async (file) => {
     // Step 1: Get auth signature from backend
-    const sigRes = await fetch(
-      `${API}/api/product/upload-signature?fileSize=${file.size}&fileType=${file.type}`,
-      { credentials: 'include' }
+    const sigRes = await fetchWithAuth(
+      `${API}/api/product/upload-signature?fileSize=${file.size}&fileType=${file.type}`
     );
     if (!sigRes.ok) throw new Error('Failed to get upload signature');
     const { signature, expire, token } = await sigRes.json();
@@ -69,11 +65,16 @@ function Products() {
 
   const createMutation = useMutation({
     mutationFn: async (productData) => {
-      return fetchWithAuth(`${API}/api/product`, {
+      const res = await fetchWithAuth(`${API}/api/product`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productData),
       });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -85,11 +86,16 @@ function Products() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }) => {
-      return fetchWithAuth(`${API}/api/product/${id}`, {
+      const res = await fetchWithAuth(`${API}/api/product/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -101,7 +107,12 @@ function Products() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return fetchWithAuth(`${API}/api/product/${id}`, { method: 'DELETE' });
+      const res = await fetchWithAuth(`${API}/api/product/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Request failed');
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
