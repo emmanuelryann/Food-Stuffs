@@ -25,8 +25,19 @@ export const validateProduct = [
 
   body('category')
     .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Category must be between 2 and 100 characters'),
+    .isIn([
+      'Fruits & Vegetables',
+      'Dairy & Eggs',
+      'Meat & Poultry',
+      'Seafood',
+      'Bakery & Bread',
+      'Pantry & Grains',
+      'Snacks & Sweets',
+      'Beverages',
+      'Frozen Foods',
+      'Household & Cleaning'
+    ])
+    .withMessage('Please select a valid category'),
 
   body('countInStock')
     .isInt({ min: 0 })

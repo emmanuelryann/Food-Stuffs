@@ -26,6 +26,18 @@ const productSchema = new Schema({
   category: {
     type: String,
     required: true,
+    enum: [
+      'Fruits & Vegetables',
+      'Dairy & Eggs',
+      'Meat & Poultry',
+      'Seafood',
+      'Bakery & Bread',
+      'Pantry & Grains',
+      'Snacks & Sweets',
+      'Beverages',
+      'Frozen Foods',
+      'Household & Cleaning'
+    ],
     index: true
   },
 

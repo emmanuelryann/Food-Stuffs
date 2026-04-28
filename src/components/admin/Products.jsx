@@ -7,6 +7,19 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const IMAGEKIT_URL = import.meta.env.VITE_IMAGEKIT_URL || 'https://ik.imagekit.io/your_id';
 const IMAGEKIT_PUBLIC_KEY = import.meta.env.VITE_IMAGEKIT_PUBLIC || '';
 
+const CATEGORIES = [
+  'Fruits & Vegetables',
+  'Dairy & Eggs',
+  'Meat & Poultry',
+  'Seafood',
+  'Bakery & Bread',
+  'Pantry & Grains',
+  'Snacks & Sweets',
+  'Beverages',
+  'Frozen Foods',
+  'Household & Cleaning'
+];
+
 function Products() {
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
@@ -311,13 +324,18 @@ function Products() {
 
                 <div className="input-group">
                   <label htmlFor="prod-category">Category</label>
-                  <input
+                  <select
                     id="prod-category"
                     className="input"
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
                     required
-                  />
+                  >
+                    <option value="" disabled>Select a category</option>
+                    {CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="input-group">
