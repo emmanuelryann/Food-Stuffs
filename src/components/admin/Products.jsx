@@ -49,6 +49,13 @@ function Products() {
     },
   });
 
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
+  });
+
+  const currency = settings?.currencySymbol || '$';
+
   const uploadToImageKit = async (file) => {
     // Step 1: Get auth signature from backend
     const sigRes = await fetchWithAuth(
@@ -280,7 +287,7 @@ function Products() {
                     <div className="product-id">ID: {product.productId}</div>
                   </td>
                   <td>{product.category}</td>
-                  <td className="price-cell">${product.price.toFixed(2)}</td>
+                  <td className="price-cell">{currency}{product.price.toFixed(2)}</td>
                   <td>{product.countInStock}</td>
                   <td>
                     <span className={`badge ${product.isActive ? 'badge-success' : 'badge-danger'}`}>
@@ -339,7 +346,7 @@ function Products() {
                 </div>
 
                 <div className="input-group">
-                  <label htmlFor="prod-price">Price</label>
+                  <label htmlFor="prod-price">Price ({currency})</label>
                   <input
                     id="prod-price"
                     type="number"

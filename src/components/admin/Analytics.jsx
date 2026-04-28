@@ -38,15 +38,24 @@ function Analytics() {
 
   const { data: purchaseData, isLoading: loadingPurchases } = useQuery({
     queryKey: ['purchase-insights', dateFrom, dateTo],
-    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/purchase-insights${buildDateParams()}`),
+    queryFn: () => {
+      const dateParams = buildDateParams();
+      const statusParam = dateParams ? '&status=completed' : '?status=completed';
+      return fetchJsonWithAuth(`${API}/api/admin/analytics/purchase-insights${dateParams}${statusParam}`);
+    },
     enabled: activeTab === 'purchases',
   });
 
   const { data: conversionData, isLoading: loadingConversion } = useQuery({
-    queryKey: ['conversion', dateFrom, dateTo],
-    queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/conversion${buildDateParams()}`),
     enabled: activeTab === 'conversion',
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
+  });
+
+  const currency = settings?.currencySymbol || '$';
 
   const isLoading = {
     activity: loadingActivity,
@@ -209,7 +218,7 @@ function Analytics() {
                             <div className="product-id">{item.productId}</div>
                           </td>
                           <td className="click-count">{item.totalQuantitySold}</td>
-                          <td className="price-cell">${item.totalRevenue.toFixed(2)}</td>
+                          <td className="price-cell">{currency}{item.totalRevenue.toFixed(2)}</td>
                           <td>{item.orderCount}</td>
                           <td className="date-cell">{new Date(item.lastOrdered).toLocaleString()}</td>
                         </tr>
@@ -248,7 +257,7 @@ function Analytics() {
                           </td>
                           <td className="click-count">{item.totalClicks}</td>
                           <td>{item.totalSales}</td>
-                          <td className="price-cell">${item.totalRevenue.toFixed(2)}</td>
+                          <td className="price-cell">{currency}{item.totalRevenue.toFixed(2)}</td>
                           <td>
                             <span className={`badge ${
                               item.conversionRate === 'N/A' ? 'badge-info' :

@@ -30,6 +30,13 @@ function Orders() {
     },
   });
 
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
+  });
+
+  const currency = settings?.currencySymbol || '$';
+
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
       const res = await fetchWithAuth(`${API}/api/orders/${id}/status`, {
@@ -197,7 +204,7 @@ function Orders() {
                   </td>
                   <td>{order.customerName || '—'}</td>
                   <td>{order.items.length} item(s)</td>
-                  <td className="price-cell">${order.totalAmount.toFixed(2)}</td>
+                  <td className="price-cell">{currency}{order.totalAmount.toFixed(2)}</td>
                   <td>
                     <div className="status-cell">
                       <span className={`status-dot ${order.status}`}></span>
@@ -253,16 +260,16 @@ function Orders() {
                           <tr key={i}>
                             <td>{item.name}</td>
                             <td>{item.quantity}</td>
-                            <td>${item.priceAtPurchase.toFixed(2)}</td>
-                            <td className="price-cell">${(item.quantity * item.priceAtPurchase).toFixed(2)}</td>
+                            <td>{currency}{item.priceAtPurchase.toFixed(2)}</td>
+                            <td className="price-cell">{currency}{(item.quantity * item.priceAtPurchase).toFixed(2)}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
                   <div className="order-totals">
-                    <div className="detail-row"><span>Delivery Fee:</span><span>${order.deliveryFee.toFixed(2)}</span></div>
-                    <div className="detail-row total-row"><span>Total:</span><span>${order.totalAmount.toFixed(2)}</span></div>
+                    <div className="detail-row"><span>Delivery Fee:</span><span>{currency}{order.deliveryFee.toFixed(2)}</span></div>
+                    <div className="detail-row total-row"><span>Total:</span><span>{currency}{order.totalAmount.toFixed(2)}</span></div>
                   </div>
                 </div>
               );

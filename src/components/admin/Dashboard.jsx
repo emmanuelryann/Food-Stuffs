@@ -20,7 +20,13 @@ function Dashboard() {
     queryFn: () => fetchJsonWithAuth(`${API}/api/admin/analytics/click-insights`),
   });
 
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => fetchJsonWithAuth(`${API}/api/settings`),
+  });
+
   const isLoading = loadingProducts || loadingOrders || loadingClicks;
+  const currency = settings?.currencySymbol || '$';
 
   const totalProducts = products?.length || 0;
   const pendingOrders = orders?.filter((o) => o.status === 'pending').length || 0;
@@ -84,7 +90,7 @@ function Dashboard() {
         <div className="stat-card">
           <div className="stat-icon"><i className="fa-solid fa-dollar-sign"></i></div>
           <div className="stat-label">Total Revenue</div>
-          <div className="stat-value">${totalRevenue.toFixed(2)}</div>
+          <div className="stat-value">{currency}{totalRevenue.toFixed(2)}</div>
           <div className="stat-sub">From completed sales</div>
         </div>
 
@@ -120,7 +126,7 @@ function Dashboard() {
                   <tr key={order.orderId}>
                     <td className="order-id-cell">{order.orderId}</td>
                     <td>{order.customerName || '—'}</td>
-                    <td>${order.totalAmount.toFixed(2)}</td>
+                    <td>{currency}{order.totalAmount.toFixed(2)}</td>
                     <td>
                       <span className={`badge ${getStatusBadge(order.status)}`}>
                         {order.status}

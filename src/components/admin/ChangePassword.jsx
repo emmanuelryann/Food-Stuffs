@@ -15,6 +15,9 @@ function ChangePassword() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (data) => {
@@ -79,44 +82,74 @@ function ChangePassword() {
 
           <div className="input-group">
             <label htmlFor="current-pwd">Current Password</label>
-            <input
-              id="current-pwd"
-              type="password"
-              className="input"
-              placeholder="Enter current password"
-              value={form.currentPassword}
-              onChange={(e) => setForm({ ...form, currentPassword: e.target.value })}
-              required
-              autoComplete="current-password"
-            />
+            <div className="input-with-icon">
+              <input
+                id="current-pwd"
+                type={showCurrent ? 'text' : 'password'}
+                className="input"
+                placeholder="Enter current password"
+                value={form.currentPassword}
+                onChange={(e) => setForm({ ...form, currentPassword: e.target.value })}
+                required
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={() => setShowCurrent(!showCurrent)}
+                aria-label={showCurrent ? 'Hide password' : 'Show password'}
+              >
+                <i className={`fa-solid ${showCurrent ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
           </div>
 
           <div className="input-group">
             <label htmlFor="new-pwd">New Password</label>
-            <input
-              id="new-pwd"
-              type="password"
-              className="input"
-              placeholder="Min. 8 characters, uppercase + number"
-              value={form.newPassword}
-              onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
-              required
-              autoComplete="new-password"
-            />
+            <div className="input-with-icon">
+              <input
+                id="new-pwd"
+                type={showNew ? 'text' : 'password'}
+                className="input"
+                placeholder="Min. 8 characters, uppercase + number"
+                value={form.newPassword}
+                onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+                required
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={() => setShowNew(!showNew)}
+                aria-label={showNew ? 'Hide password' : 'Show password'}
+              >
+                <i className={`fa-solid ${showNew ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
           </div>
 
           <div className="input-group">
             <label htmlFor="confirm-pwd">Confirm New Password</label>
-            <input
-              id="confirm-pwd"
-              type="password"
-              className="input"
-              placeholder="Re-enter new password"
-              value={form.confirmPassword}
-              onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-              required
-              autoComplete="new-password"
-            />
+            <div className="input-with-icon">
+              <input
+                id="confirm-pwd"
+                type={showConfirm ? 'text' : 'password'}
+                className="input"
+                placeholder="Re-enter new password"
+                value={form.confirmPassword}
+                onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                required
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={() => setShowConfirm(!showConfirm)}
+                aria-label={showConfirm ? 'Hide password' : 'Show password'}
+              >
+                <i className={`fa-solid ${showConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
           </div>
 
           <button

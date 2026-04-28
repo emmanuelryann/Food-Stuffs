@@ -356,6 +356,38 @@ body:has(.layout) {
 .status-dot.completed { background-color: var(--color-success); }
 .status-dot.cancelled { background-color: var(--color-danger); }
 
+/* ============================================================
+   INPUT WITH ICON (Password Toggle)
+   ============================================================ */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .input {
+  padding-right: var(--space-10);
+}
+
+.icon-btn {
+  position: absolute;
+  right: var(--space-3);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-base);
+  z-index: 2;
+}
+
+.icon-btn:hover {
+  color: var(--color-text-primary);
+}
+
 
 /* ============================================================
    FORM ELEMENTS
