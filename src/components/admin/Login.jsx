@@ -27,7 +27,7 @@ function Login() {
       // Re-fetch CSRF token to sync with the new authenticated session cookie
       await fetchCsrfToken();
       localStorage.setItem('admin', JSON.stringify(data.admin));
-      navigate('/');
+      navigate('/admin');
     },
     onError: (err) => {
       setError(err.message);

@@ -7,12 +7,12 @@ import '../../styles/admin/layout.css';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: '📊' },
-  { path: '/products', label: 'Products', icon: '📦' },
-  { path: '/orders', label: 'Orders', icon: '🧾' },
-  { path: '/analytics', label: 'Analytics', icon: '📈' },
-  { path: '/settings', label: 'Settings', icon: '⚙️' },
-  { path: '/admin-management', label: 'Admin Management', icon: '👥' },
+  { path: '/admin', label: 'Dashboard', icon: '📊' },
+  { path: '/admin/products', label: 'Products', icon: '📦' },
+  { path: '/admin/orders', label: 'Orders', icon: '🧾' },
+  { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
+  { path: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { path: '/admin/admin-management', label: 'Admin Management', icon: '👥' },
 ];
 
 function Layout() {
@@ -32,12 +32,12 @@ function Layout() {
       // Fetch a new anonymous token after logout
       await fetchCsrfToken();
       localStorage.removeItem('admin');
-      navigate('/login');
+      navigate('/admin/login');
     },
     onError: async () => {
       await fetchCsrfToken();
       localStorage.removeItem('admin');
-      navigate('/login');
+      navigate('/admin/login');
     },
   });
 
@@ -70,7 +70,7 @@ function Layout() {
             <NavLink
               key={item.path}
               to={item.path}
-              end={item.path === '/'}
+              end={item.path === '/admin'}
               className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
               onClick={() => setSidebarOpen(false)}
             >
@@ -82,7 +82,7 @@ function Layout() {
 
         <div className="sidebar-footer">
           <NavLink
-            to="/change-password"
+            to="/admin/change-password"
             className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
             onClick={() => setSidebarOpen(false)}
           >

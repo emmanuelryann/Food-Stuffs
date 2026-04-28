@@ -34,7 +34,7 @@ function ChangePassword() {
       await fetchCsrfToken(); // fetch an anonymous token before redirecting
       setTimeout(() => {
         localStorage.removeItem('admin');
-        navigate('/login');
+        navigate('/admin/login');
       }, 2000);
     },
     onError: (err) => {
