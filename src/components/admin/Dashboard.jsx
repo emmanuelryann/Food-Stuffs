@@ -61,35 +61,35 @@ function Dashboard() {
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📦</div>
+          <div className="stat-icon"><i className="fa-solid fa-box"></i></div>
           <div className="stat-label">Total Products</div>
           <div className="stat-value">{totalProducts}</div>
           <div className="stat-sub">Active in store</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">⏳</div>
+          <div className="stat-icon"><i className="fa-solid fa-clock"></i></div>
           <div className="stat-label">Pending Orders</div>
           <div className="stat-value">{pendingOrders}</div>
           <div className="stat-sub">Awaiting action</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon"><i className="fa-solid fa-circle-check"></i></div>
           <div className="stat-label">Completed Orders</div>
           <div className="stat-value">{completedOrders}</div>
           <div className="stat-sub">Successfully fulfilled</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">💰</div>
+          <div className="stat-icon"><i className="fa-solid fa-dollar-sign"></i></div>
           <div className="stat-label">Total Revenue</div>
           <div className="stat-value">${totalRevenue.toFixed(2)}</div>
           <div className="stat-sub">From completed sales</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">👆</div>
+          <div className="stat-icon"><i className="fa-solid fa-arrow-pointer"></i></div>
           <div className="stat-label">Total Clicks</div>
           <div className="stat-value">{totalClicks}</div>
           <div className="stat-sub">WhatsApp click intents</div>

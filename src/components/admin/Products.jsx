@@ -271,7 +271,7 @@ function Products() {
                       {product.image?.url ? (
                         <img src={product.image.url} alt={product.name} />
                       ) : (
-                        <span className="no-image">📷</span>
+                        <span className="no-image"><i className="fa-solid fa-camera"></i></span>
                       )}
                     </div>
                   </td>

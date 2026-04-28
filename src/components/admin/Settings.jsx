@@ -89,7 +89,7 @@ function Settings() {
 
       <form onSubmit={handleSubmit} className="settings-form">
         <div className="settings-section">
-          <h2 className="section-title">💰 Pricing</h2>
+          <h2 className="section-title"><i className="fa-solid fa-dollar-sign"></i> Pricing</h2>
           <div className="settings-grid">
             <div className="input-group">
               <label htmlFor="currency">Currency Symbol</label>
@@ -131,7 +131,7 @@ function Settings() {
         </div>
 
         <div className="settings-section">
-          <h2 className="section-title">📱 Contact & Display</h2>
+          <h2 className="section-title"><i className="fa-solid fa-mobile-screen-button"></i> Contact & Display</h2>
           <div className="settings-grid">
             <div className="input-group">
               <label htmlFor="whatsapp">WhatsApp Number</label>
@@ -161,7 +161,7 @@ function Settings() {
         </div>
 
         <div className="settings-section">
-          <h2 className="section-title">🏪 Store Status</h2>
+          <h2 className="section-title"><i className="fa-solid fa-store"></i> Store Status</h2>
           <div className="store-toggle">
             <label className="toggle-switch">
               <input

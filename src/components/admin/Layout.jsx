@@ -8,12 +8,12 @@ import '../../styles/admin/layout.css';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const navItems = [
-  { path: '/admin', label: 'Dashboard', icon: '📊' },
-  { path: '/admin/products', label: 'Products', icon: '📦' },
-  { path: '/admin/orders', label: 'Orders', icon: '🧾' },
-  { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
-  { path: '/admin/settings', label: 'Settings', icon: '⚙️' },
-  { path: '/admin/admin-management', label: 'Admin Management', icon: '👥' },
+  { path: '/admin', label: 'Dashboard', icon: <i className="fa-solid fa-chart-line"></i> },
+  { path: '/admin/products', label: 'Products', icon: <i className="fa-solid fa-box"></i> },
+  { path: '/admin/orders', label: 'Orders', icon: <i className="fa-solid fa-file-invoice"></i> },
+  { path: '/admin/analytics', label: 'Analytics', icon: <i className="fa-solid fa-chart-column"></i> },
+  { path: '/admin/settings', label: 'Settings', icon: <i className="fa-solid fa-gear"></i> },
+  { path: '/admin/admin-management', label: 'Admin Management', icon: <i className="fa-solid fa-users"></i> },
 ];
 
 function Layout() {
@@ -62,7 +62,7 @@ function Layout() {
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
-          <h2 className="sidebar-logo">🍔 Food Stuffs</h2>
+          <h2 className="sidebar-logo"><i className="fa-solid fa-utensils"></i> Food Stuffs</h2>
           <button
             className="sidebar-close"
             onClick={() => setSidebarOpen(false)}
@@ -93,7 +93,7 @@ function Layout() {
             className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
             onClick={() => setSidebarOpen(false)}
           >
-            <span className="nav-icon">🔒</span>
+            <span className="nav-icon"><i className="fa-solid fa-lock"></i></span>
             <span className="nav-label">Change Password</span>
           </NavLink>
         </div>

@@ -63,7 +63,7 @@ function AdminManagement() {
           </div>
         </div>
         <div className="access-denied card">
-          <h2>🔒 Access Restricted</h2>
+          <h2><i className="fa-solid fa-lock"></i> Access Restricted</h2>
           <p>Only Super Admins can access this page. Your current role is <strong>{admin.role}</strong>.</p>
         </div>
       </div>

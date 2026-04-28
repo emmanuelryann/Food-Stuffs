@@ -112,6 +112,16 @@ body:has(.layout) {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
+/* Ensure Font Awesome icons are visible and correctly sized */
+.login-page i,
+.layout i {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
 /* -----------------------------------------------------------------
    SCOPED ELEMENT OVERRIDES
    The general frontend's index.css strips borders from inputs,
@@ -170,6 +180,16 @@ body:has(.layout) {
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--color-border);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .layout .section-title::after {
@@ -314,6 +334,28 @@ body:has(.layout) {
   background: var(--color-info-subtle);
   color: var(--color-info);
 }
+
+/* ============================================================
+   STATUS INDICATORS
+   ============================================================ */
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot.pending { background-color: var(--color-warning); }
+.status-dot.completed { background-color: var(--color-success); }
+.status-dot.cancelled { background-color: var(--color-danger); }
+
 
 /* ============================================================
    FORM ELEMENTS
@@ -555,6 +597,12 @@ body:has(.layout) {
   margin-top: var(--space-1);
 }
 
+.stat-icon {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+}
+
 .toolbar {
   display: flex;
   align-items: center;
@@ -636,6 +684,12 @@ body:has(.layout) {
   font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-text-primary);
+}
+
+.stat.no-image {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-muted);
+  opacity: 0.6;
 }
 
 .stat-sub {

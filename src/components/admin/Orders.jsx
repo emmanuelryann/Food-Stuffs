@@ -199,16 +199,19 @@ function Orders() {
                   <td>{order.items.length} item(s)</td>
                   <td className="price-cell">${order.totalAmount.toFixed(2)}</td>
                   <td>
-                    <select
-                      className="status-select"
-                      value={order.status}
-                      onChange={(e) => statusMutation.mutate({ id: order.orderId, status: e.target.value })}
-                      disabled={statusMutation.isPending}
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
+                    <div className="status-cell">
+                      <span className={`status-dot ${order.status}`}></span>
+                      <select
+                        className="status-select"
+                        value={order.status}
+                        onChange={(e) => statusMutation.mutate({ id: order.orderId, status: e.target.value })}
+                        disabled={statusMutation.isPending}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </div>
                   </td>
                   <td className="date-cell">{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td>
