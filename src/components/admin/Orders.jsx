@@ -143,7 +143,7 @@ function Orders() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select className="input" value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">All Statuses</option>
           <option value="pending">Pending</option>
           <option value="completed">Completed</option>

@@ -54,6 +54,7 @@
   --font-size-xs:   0.75rem;
   --font-size-sm:   0.875rem;
   --font-size-base: 1rem;
+  --font-size-md:   1rem;
   --font-size-lg:   1.125rem;
   --font-size-xl:   1.25rem;
   --font-size-2xl:  1.5rem;
@@ -67,8 +68,13 @@
   --radius-full: 9999px;
 
   /* Transitions */
+  --transition-fast: 150ms ease;
   --transition-base: 200ms ease;
   --transition-slow: 300ms ease;
+
+  /* Aliases */
+  --color-bg-input:     var(--color-bg-tertiary);
+  --color-border-focus: var(--color-accent);
 }
 
 /* ============================================================
@@ -95,6 +101,7 @@
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text-primary);
   background: var(--color-bg-primary);
+  line-height: 1.5;
 }
 
 /* Make the html/body fill the viewport properly on admin pages */
@@ -103,6 +110,70 @@ body:has(.layout) {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* -----------------------------------------------------------------
+   SCOPED ELEMENT OVERRIDES
+   The general frontend's index.css strips borders from inputs,
+   selects, textareas, and buttons globally. We restore them here
+   so admin form elements render correctly.
+   ----------------------------------------------------------------- */
+.login-page input,
+.login-page select,
+.login-page textarea,
+.layout input,
+.layout select,
+.layout textarea {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  border-radius: var(--radius-md);
+  outline: none;
+}
+
+.login-page select,
+.layout select {
+  appearance: auto;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+.login-page select option,
+.layout select option {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.login-page button,
+.layout button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Ensure links inside admin don't inherit general frontend color */
+.login-page a,
+.layout a {
+  color: var(--color-accent);
+}
+
+/* Override general frontend's .section-title inside admin pages */
+.layout .section-title {
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  position: static;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.layout .section-title::after {
+  display: none;
 }
 
 /* ============================================================
@@ -525,6 +596,51 @@ body:has(.layout) {
 .tab.active {
   color: var(--color-accent);
   border-bottom-color: var(--color-accent);
+}
+
+/* ============================================================
+   STATS GRID (Dashboard)
+   ============================================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.stat-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+
+.stat-card:hover {
+  border-color: var(--color-accent-subtle);
+  transform: translateY(-2px);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.stat-sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 
 /* ============================================================
