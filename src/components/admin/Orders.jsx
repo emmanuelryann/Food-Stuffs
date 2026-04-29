@@ -222,7 +222,22 @@ function Orders() {
                   </td>
                   <td className="date-cell">{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => setDeleteConfirm(order)}>Delete</button>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        className="btn btn-ghost btn-sm" 
+                        onClick={() => setExpandedOrder(order.orderId)}
+                        title="View Details"
+                      >
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button 
+                        className="btn btn-danger btn-sm" 
+                        onClick={() => setDeleteConfirm(order)}
+                        title="Delete Order"
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
