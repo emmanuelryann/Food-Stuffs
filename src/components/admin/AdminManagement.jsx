@@ -1,46 +1,61 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '../../utils/api';
 import '../../styles/admin/adminmanagement.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const STATUS_OPTIONS = ['active', 'deactivated', 'suspended', 'deleted'];
+const ROLE_OPTIONS = ['admin', 'super_admin'];
 
 function AdminManagement() {
   const queryClient = useQueryClient();
-  const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-  const isSuperAdmin = admin.role === 'super_admin';
+  const loggedInAdmin = JSON.parse(localStorage.getItem('admin') || '{}');
+  const isSuperAdmin = loggedInAdmin.role === 'super_admin';
 
   const [toast, setToast] = useState(null);
-  const [adminId, setAdminId] = useState('');
-  const [newStatus, setNewStatus] = useState('active');
-  const [statusConfirm, setStatusConfirm] = useState(false);
+  const [viewAdmin, setViewAdmin] = useState(null);
+  
+  // Edit State
+  const [editAdmin, setEditAdmin] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editRole, setEditRole] = useState('admin');
+  const [editStatus, setEditStatus] = useState('active');
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const statusMutation = useMutation({
-    mutationFn: async ({ id, status }) => {
-      const res = await fetchWithAuth(`${API}/api/admin/${id}/status`, {
+  const { data: admins = [], isLoading } = useQuery({
+    queryKey: ['admins'],
+    queryFn: async () => {
+      const res = await fetchWithAuth(`${API}/api/admins`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to fetch admins');
+      return data;
+    },
+    enabled: isSuperAdmin,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, updates }) => {
+      const res = await fetchWithAuth(`${API}/api/admin/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify(updates),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Failed to update status');
+      if (!res.ok) throw new Error(data.message || 'Failed to update admin');
       return data;
     },
     onSuccess: (data) => {
-      showToast(data.message || 'Admin status updated');
-      setStatusConfirm(false);
-      setAdminId('');
+      showToast(data.message || 'Admin updated successfully');
+      setEditAdmin(null);
+      queryClient.invalidateQueries({ queryKey: ['admins'] });
     },
     onError: (err) => {
       showToast(err.message, 'error');
-      setStatusConfirm(false);
     },
   });
 
@@ -54,6 +69,27 @@ function AdminManagement() {
     return map[status] || 'badge-info';
   };
 
+  const handleEditClick = (admin) => {
+    setEditAdmin(admin);
+    setEditName(admin.name);
+    setEditRole(admin.role);
+    setEditStatus(admin.status);
+  };
+
+  const handleUpdateAdmin = () => {
+    if (!editAdmin) return;
+    const updates = {};
+    if (editName !== editAdmin.name) updates.name = editName;
+    if (editRole !== editAdmin.role) updates.role = editRole;
+    if (editStatus !== editAdmin.status) updates.status = editStatus;
+    
+    if (Object.keys(updates).length > 0) {
+      updateMutation.mutate({ id: editAdmin._id, updates });
+    } else {
+      setEditAdmin(null);
+    }
+  };
+
   if (!isSuperAdmin) {
     return (
       <div className="admin-management-page">
@@ -64,7 +100,7 @@ function AdminManagement() {
         </div>
         <div className="access-denied card">
           <h2><i className="fa-solid fa-lock"></i> Access Restricted</h2>
-          <p>Only Super Admins can access this page. Your current role is <strong>{admin.role}</strong>.</p>
+          <p>Only Super Admins can access this page. Your current role is <strong>{loggedInAdmin.role}</strong>.</p>
         </div>
       </div>
     );
@@ -77,102 +113,167 @@ function AdminManagement() {
       <div className="page-header">
         <div>
           <h1>Admin Management</h1>
-          <p>Manage admin accounts and their access status.</p>
+          <p>Manage admin accounts, roles, and access statuses.</p>
         </div>
       </div>
 
       <div className="management-card card">
-        <h2 className="card-title">Update Admin Status</h2>
-        <p className="card-desc">
-          Change the status of any admin account. Deactivating, suspending, or deleting an admin
-          will immediately terminate all their active sessions.
-        </p>
-
-        <div className="status-form">
-          <div className="input-group">
-            <label htmlFor="admin-id-input">Admin ID</label>
-            <input
-              id="admin-id-input"
-              className="input"
-              placeholder="Enter the admin's MongoDB ObjectId"
-              value={adminId}
-              onChange={(e) => setAdminId(e.target.value)}
-            />
+        {isLoading ? (
+          <div className="loading-screen">
+            <div className="spinner spinner-lg"></div>
+            <p>Loading admins…</p>
           </div>
-
-          <div className="input-group">
-            <label htmlFor="status-select">New Status</label>
-            <select
-              id="status-select"
-              className="input"
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-            >
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+        ) : admins.length === 0 ? (
+          <div className="empty-state">
+            <h3>No admins found</h3>
           </div>
-
-          <button
-            className="btn btn-primary"
-            disabled={!adminId.trim() || statusMutation.isPending}
-            onClick={() => setStatusConfirm(true)}
-          >
-            Update Status
-          </button>
-        </div>
-
-        <div className="status-legend">
-          <h3>Status Guide</h3>
-          <div className="legend-grid">
-            <div className="legend-item">
-              <span className="badge badge-success">active</span>
-              <span>Admin can log in and perform actions normally.</span>
-            </div>
-            <div className="legend-item">
-              <span className="badge badge-warning">deactivated</span>
-              <span>Account is disabled. Admin cannot log in.</span>
-            </div>
-            <div className="legend-item">
-              <span className="badge badge-danger">suspended</span>
-              <span>Account is frozen for investigation. Admin cannot log in.</span>
-            </div>
-            <div className="legend-item">
-              <span className="badge badge-danger">deleted</span>
-              <span>Account is marked as deleted. Admin cannot log in.</span>
-            </div>
+        ) : (
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {admins.map((admin, index) => (
+                  <tr key={admin?._id || index}>
+                    <td><strong>{admin?.name}</strong></td>
+                    <td>{admin?.email}</td>
+                    <td>
+                      <span className={`badge ${admin.role === 'super_admin' ? 'badge-info' : 'badge-neutral'}`}>
+                        {admin.role.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge ${getStatusBadge(admin.status)}`}>{admin.status}</span>
+                    </td>
+                    <td className="date-cell">{new Date(admin.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button 
+                          className="btn btn-ghost btn-sm" 
+                          onClick={() => setViewAdmin(admin)}
+                          title="View Admin"
+                        >
+                          <i className="fa-solid fa-eye"></i>
+                        </button>
+                        <button 
+                          className="btn btn-ghost btn-sm" 
+                          onClick={() => handleEditClick(admin)}
+                          title="Edit Admin"
+                        >
+                          <i className="fa-solid fa-pen-to-square"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Confirmation Modal */}
-      {statusConfirm && (
-        <div className="modal-overlay" onClick={() => setStatusConfirm(false)}>
+      {/* View Admin Modal */}
+      {viewAdmin && (
+        <div className="modal-overlay" onClick={() => setViewAdmin(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Confirm Status Change</h2>
+              <h2>Admin Details</h2>
+              <button className="btn btn-ghost btn-sm" onClick={() => setViewAdmin(null)}>✕</button>
             </div>
-            <p>
-              You are about to set admin <strong className="highlight-id">{adminId}</strong> to{' '}
-              <span className={`badge ${getStatusBadge(newStatus)}`}>{newStatus}</span>.
-            </p>
-            {newStatus !== 'active' && (
-              <p className="warning-text">
-                ⚠️ This will immediately terminate all active sessions for this admin.
+            <div className="admin-detail">
+              <div className="detail-row"><span>Name:</span><span>{viewAdmin.name}</span></div>
+              <div className="detail-row"><span>Email:</span><span>{viewAdmin.email}</span></div>
+              <div className="detail-row"><span>Role:</span><span className="badge badge-info">{viewAdmin.role.replace('_', ' ')}</span></div>
+              <div className="detail-row"><span>Status:</span><span className={`badge ${getStatusBadge(viewAdmin.status)}`}>{viewAdmin.status}</span></div>
+              <div className="detail-row"><span>Email Verified:</span><span>{viewAdmin.isEmailVerified ? 'Yes' : 'No'}</span></div>
+              <div className="detail-row"><span>Last Login:</span><span>{viewAdmin.lastLogin ? new Date(viewAdmin.lastLogin).toLocaleString() : 'Never'}</span></div>
+              <div className="detail-row"><span>Created At:</span><span>{new Date(viewAdmin.createdAt).toLocaleString()}</span></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Admin Modal */}
+      {editAdmin && (
+        <div className="modal-overlay" onClick={() => setEditAdmin(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Admin</h2>
+              <button className="btn btn-ghost btn-sm" onClick={() => setEditAdmin(null)}>✕</button>
+            </div>
+            <div className="admin-form">
+              <div className="input-group">
+                <label htmlFor="edit-name">Name</label>
+                <input
+                  id="edit-name"
+                  className="input"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                />
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="edit-role">Role</label>
+                <select
+                  id="edit-role"
+                  className="input"
+                  value={editRole}
+                  onChange={(e) => setEditRole(e.target.value)}
+                  disabled={editAdmin?._id === (loggedInAdmin?.id || loggedInAdmin?._id)}
+                >
+                  {ROLE_OPTIONS.map((r) => (
+                    <option key={r} value={r}>{r.replace('_', ' ')}</option>
+                  ))}
+                </select>
+                {editAdmin?._id === (loggedInAdmin?.id || loggedInAdmin?._id) && (
+                  <span className="input-hint">You cannot change your own role.</span>
+                )}
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="edit-status">Status</label>
+                <select
+                  id="edit-status"
+                  className="input"
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                  disabled={editAdmin?._id === (loggedInAdmin?.id || loggedInAdmin?._id)}
+                >
+                  {STATUS_OPTIONS.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+                {editAdmin?._id === (loggedInAdmin?.id || loggedInAdmin?._id) && (
+                  <span className="input-hint">You cannot change your own status.</span>
+                )}
+              </div>
+            </div>
+            
+            {editStatus !== 'active' && editStatus !== editAdmin.status && (
+              <p className="warning-text" style={{ marginBottom: '16px' }}>
+                ⚠️ Deactivating, suspending, or deleting will terminate their active sessions immediately.
               </p>
             )}
+
             <div className="modal-actions">
-              <button className="btn btn-secondary" onClick={() => setStatusConfirm(false)}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => setEditAdmin(null)}>Cancel</button>
               <button
-                className={`btn ${newStatus === 'active' ? 'btn-primary' : 'btn-danger'}`}
-                onClick={() => statusMutation.mutate({ id: adminId, status: newStatus })}
-                disabled={statusMutation.isPending}
+                className="btn btn-primary"
+                onClick={handleUpdateAdmin}
+                disabled={updateMutation.isPending || (!editName.trim())}
               >
-                {statusMutation.isPending ? (
-                  <><span className="spinner"></span>Updating…</>
+                {updateMutation.isPending ? (
+                  <><span className="spinner"></span>Saving…</>
                 ) : (
-                  `Set to ${newStatus}`
+                  'Save Changes'
                 )}
               </button>
             </div>

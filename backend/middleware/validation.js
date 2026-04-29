@@ -220,14 +220,26 @@ export const validateChangePassword = [
     .withMessage('New password must contain at least one uppercase letter, one lowercase letter, and one number'),
 ];
 
-export const validateAdminStatus = [
+export const validateAdminUpdate = [
   param('id')
     .isMongoId()
     .withMessage('Invalid admin ID'),
 
   body('status')
+    .optional()
     .isIn(['active', 'deactivated', 'suspended', 'deleted'])
     .withMessage('Status must be one of: active, deactivated, suspended, deleted'),
+
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Name must be between 2 and 50 characters'),
+
+  body('role')
+    .optional()
+    .isIn(['admin', 'super_admin'])
+    .withMessage('Role must be one of: admin, super_admin'),
 ];
 
 export const validateOrderId = [

@@ -1,6 +1,6 @@
-.admin-management-page {
-  max-width: 720px;
-}
+/* .admin-management-page {
+  Removed max-width to allow the table to stretch
+} */
 
 .access-denied {
   text-align: center;
@@ -19,6 +19,7 @@
 
 .management-card {
   padding: var(--space-8);
+  margin-bottom: var(--space-8);
 }
 
 .card-title {
@@ -34,44 +35,36 @@
   line-height: 1.6;
 }
 
-.status-form {
+.admin-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  margin-bottom: var(--space-8);
-  padding-bottom: var(--space-6);
-  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
-.status-form .btn {
-  align-self: flex-start;
-}
-
-/* Status Legend */
-.status-legend h3 {
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  margin-bottom: var(--space-4);
-  color: var(--color-text-secondary);
-}
-
-.legend-grid {
+.admin-detail {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.legend-item {
+.detail-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--space-4);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-base);
 }
 
-.legend-item .badge {
-  min-width: 100px;
-  justify-content: center;
+.detail-row span:first-child {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--space-2);
 }
 
 .highlight-id {
