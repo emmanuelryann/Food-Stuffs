@@ -85,7 +85,7 @@ router.post("/signup", validateSignup, handleValidationErrors, async (req, res) 
 			action: 'admin_signup',
 			performedBy: { adminId: newAdmin._id, email: newAdmin.email, role: newAdmin.role },
 			targetType: 'admin',
-			targetId: newAdmin._id.toString(),
+			targetId: newAdmin.email,
 			details: `New admin account created: ${newAdmin.email}`,
 			req,
 		});
@@ -231,7 +231,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 			action: 'admin_login',
 			performedBy: { adminId: admin._id, email: admin.email, role: admin.role },
 			targetType: 'admin',
-			targetId: admin._id.toString(),
+			targetId: admin.email,
 			details: `Admin logged in: ${admin.email}`,
 			req,
 		});
@@ -282,6 +282,7 @@ router.post("/logout", async (req, res) => {
 			action: 'admin_logout',
 			performedBy: { adminId: decoded.adminId, email: decoded.email, role: decoded.role },
 			targetType: 'admin',
+			targetId: decoded.email,
 			details: `Admin logged out: ${decoded.email || 'unknown'}`,
 			req,
 		});
@@ -348,7 +349,7 @@ router.patch("/change-password", requireAuth, validateChangePassword, handleVali
 			action: 'admin_password_changed',
 			performedBy: { adminId: admin._id, email: admin.email, role: admin.role },
 			targetType: 'admin',
-			targetId: admin._id.toString(),
+			targetId: admin.email,
 			details: `Admin changed their password: ${admin.email}`,
 			req,
 		});

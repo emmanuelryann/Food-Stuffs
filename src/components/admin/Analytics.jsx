@@ -74,6 +74,19 @@ function Analytics() {
     return 'badge-info';
   };
 
+  const getDisplayTargetId = (log) => {
+    if (log.targetType === 'admin') {
+      if (log.targetId && String(log.targetId).includes('@')) {
+        return log.targetId;
+      }
+      if (log.details && log.details.includes(': ')) {
+        const parts = log.details.split(': ');
+        return parts[parts.length - 1];
+      }
+    }
+    return log.targetId || '—';
+  };
+
   return (
     <div className="analytics-page">
       <div className="page-header">
@@ -149,9 +162,13 @@ function Analytics() {
                     <tbody>
                       {activityData.logs.map((log) => (
                         <tr key={log._id}>
-                          <td><span className={`badge ${getActionBadge(log.action)}`}>{log.action}</span></td>
+                          <td>
+                            <span className={`badge ${getActionBadge(log.action)}`}>
+                              {log.action.replace(/_/g, ' ')}
+                            </span>
+                          </td>
                           <td className="performer-cell">{log.performedBy?.email || '—'}</td>
-                          <td><span className="target-id">{log.targetId || '—'}</span></td>
+                          <td><span className="target-id">{getDisplayTargetId(log)}</span></td>
                           <td className="details-cell">{log.details}</td>
                           <td className="date-cell">{new Date(log.createdAt).toLocaleString()}</td>
                         </tr>

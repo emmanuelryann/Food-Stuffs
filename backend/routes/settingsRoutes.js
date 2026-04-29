@@ -115,7 +115,7 @@ router.patch("/admin/:id/status", requireSuperAdmin, validateAdminStatus, handle
 			action: 'admin_status_updated',
 			performedBy: { adminId: req.user.adminId, email: req.user.email, role: req.user.role },
 			targetType: 'admin',
-			targetId: id,
+			targetId: admin.email,
 			details: `Admin status changed from ${previousStatus} to ${status}: ${admin.email}`,
 			metadata: { previousStatus, newStatus: status },
 			req,
