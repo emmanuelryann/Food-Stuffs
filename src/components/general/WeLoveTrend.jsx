@@ -2,14 +2,14 @@ import '../../styles/general/weLoveTrend.css';
 
 const WeLoveTrend = () => {
   const products = [
-    { id: 1, name: 'Tomatos', price: '$5.99 – $15.99', image: 'https://images.unsplash.com/photo-1546470427-0d4db154ceb8?w=300&h=300&fit=crop', rating: 4 },
-    { id: 2, name: 'Limes', price: '$2.99 – $8.99', image: 'https://images.unsplash.com/photo-1590502593747-42a996133562?w=300&h=300&fit=crop', rating: 5 },
-    { id: 3, name: 'Broccoli', price: '$3.99 – $10.99', image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=300&h=300&fit=crop', rating: 4 },
-    { id: 4, name: 'Cabbage', price: '$1.99 – $6.99', image: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=300&h=300&fit=crop', rating: 5 },
-    { id: 5, name: 'Lemon', price: '$0.99 – $3.99', image: 'https://images.unsplash.com/photo-1582287014914-3f3c1bbd9e65?w=300&h=300&fit=crop', rating: 4 },
-    { id: 6, name: 'Cucumber', price: '$2.99 – $7.99', image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=300&h=300&fit=crop', rating: 5 },
-    { id: 7, name: 'Beetroot', price: '$3.99 – $9.99', image: 'https://images.unsplash.com/photo-1518977676601-b53f82ber7e1?w=300&h=300&fit=crop', rating: 4 },
-    { id: 8, name: 'Potato', price: '$2.99 – $8.99', image: 'https://images.unsplash.com/photo-1518977676601-b53f82ber7e0?w=300&h=300&fit=crop', rating: 5 },
+    { id: 1, name: 'Tomatos', price: '$5.99 – $15.99', image: 'https://images.pexels.com/photos/209401/pexels-photo-209401.jpeg', rating: 4 },
+    { id: 2, name: 'Limes', price: '$2.99 – $8.99', image: 'https://images.pexels.com/photos/13427978/pexels-photo-13427978.jpeg', rating: 5 },
+    { id: 3, name: 'Broccoli', price: '$3.99 – $10.99', image: 'https://images.pexels.com/photos/4564501/pexels-photo-4564501.jpeg', rating: 4 },
+    { id: 4, name: 'Cabbage', price: '$1.99 – $6.99', image: 'https://images.pexels.com/photos/13796758/pexels-photo-13796758.jpeg', rating: 5 },
+    { id: 5, name: 'Lemon', price: '$0.99 – $3.99', image: 'https://images.pexels.com/photos/4090363/pexels-photo-4090363.jpeg', rating: 4 },
+    { id: 6, name: 'Cucumber', price: '$2.99 – $7.99', image: 'https://media.istockphoto.com/id/492532141/photo/fresh-cucumber-on-the-wooden-table.jpg?b=1&s=612x612&w=0&k=20&c=ou_VjDds9-p9wY3n4KN7dKmbT2gnu0PUoTjUAPrGsks=', rating: 5 },
+    { id: 7, name: 'Beetroot', price: '$3.99 – $9.99', image: 'https://media.istockphoto.com/id/599695694/photo/red-beetroot-with-green-leaves.jpg?b=1&s=612x612&w=0&k=20&c=i-hlI4ExXT2N-Uq1dOR6rpozW8it_rMGpSjgbWRK800=', rating: 4 },
+    { id: 8, name: 'Potato', price: '$2.99 – $8.99', image: 'https://media.istockphoto.com/id/1475113258/photo/raw-potatoes-freshly-cut-in-half-isolated-on-white-background.jpg?b=1&s=612x612&w=0&k=20&c=1puUzCqolMdFTkXNb6z5WBWF00y0F917ElKt9Enc8x4=', rating: 5 },
   ];
 
   const renderStars = (count) => {

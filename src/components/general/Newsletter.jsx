@@ -11,23 +11,23 @@ const Newsletter = () => {
     }
   };
 
-  const brands = ['OPPO', 'DELL', 'Lenovo', 'ASUS', 'Apple', 'SONY'];
+  // const brands = ['OPPO', 'DELL', 'Lenovo', 'ASUS', 'Apple', 'SONY'];
 
   return (
     <section className="newsletter-section">
       {/* Brand Logos */}
-      <div className="brands-bar">
+      {/* <div className="brands-bar">
         <div className="brands-container">
           {brands.map((brand) => (
             <span key={brand} className="brand-name">{brand}</span>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Newsletter */}
       <div className="newsletter">
         <div className="newsletter-container">
-          <h2 className="newsletter-title">Join Our Cosmetics News &amp; Offers</h2>
+          <h2 className="newsletter-title">Join Our News &amp; Offers</h2>
           <p className="newsletter-text">
             Subscribe to our newsletter and get exclusive deals, latest updates, and special offers delivered to your inbox.
           </p>

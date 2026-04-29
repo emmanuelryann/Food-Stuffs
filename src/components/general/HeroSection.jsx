@@ -22,7 +22,7 @@ const HeroSection = () => {
         </div>
         <div className="hero-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=500&fit=crop"
+            src="https://images.pexels.com/photos/33975355/pexels-photo-33975355.jpeg"
             alt="Fresh organic vegetables in a basket"
             className="hero-image"
             loading="eager"

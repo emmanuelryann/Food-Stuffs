@@ -23,7 +23,7 @@ const LandingPage = () => {
         <WhyChooseUs />
         <BannerSection />
         <TrendingProducts />
-        <ClientTestimonials />
+        {/* <ClientTestimonials /> */}
         <SpecialDiscount />
         <LatestBlog />
         <Newsletter />
