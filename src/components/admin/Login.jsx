@@ -10,7 +10,6 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -74,26 +73,16 @@ function Login() {
 
             <div className="input-group">
               <label htmlFor="password">Password</label>
-              <div className="input-with-icon">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  className="input"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  className="icon-btn"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                </button>
-              </div>
+              <input
+                id="password"
+                type="password"
+                className="input"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
             </div>
 
             <button
