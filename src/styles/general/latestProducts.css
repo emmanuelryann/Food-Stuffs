@@ -90,14 +90,26 @@
 /* --- Responsive --- */
 @media (max-width: 48rem) {
   .latest-card {
-    flex-basis: max(9rem, 45%);
-    max-width: max(12rem, 48%);
+    flex-basis: calc(45% - 0.5rem);
+    max-width: none;
+    padding: 0.5rem;
+  }
+
+  .latest-card-info {
+    padding: 0.375rem;
+  }
+
+  .latest-card-info h3 {
+    font-size: 0.75rem;
+  }
+
+  .latest-price {
+    font-size: 0.8125rem;
   }
 }
 
 @media (max-width: 30rem) {
   .latest-card {
     flex-basis: 100%;
-    max-width: 100%;
   }
 }

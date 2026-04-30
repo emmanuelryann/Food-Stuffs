@@ -3,6 +3,7 @@ import '../../styles/general/header.css';
 
 const Header = () => {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   const openSideNav = () => {
     setIsSideNavOpen(true);
@@ -20,15 +21,42 @@ const Header = () => {
     };
   }, []);
 
+  // Intersection Observer for Active Section
+  useEffect(() => {
+    const sections = ['home', 'about', 'products', 'blog', 'footer'];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleNavClick = (e) => {
     const href = e.currentTarget.getAttribute('href');
     if (href && href.startsWith('#')) {
       e.preventDefault();
-      const target = document.querySelector(href);
+      const id = href.substring(1);
+      const target = document.getElementById(id);
+      
       if (target) {
         closeSideNav();
         
-        // Use a slight delay to ensure side-nav close animation doesn't interfere
         setTimeout(() => {
           const header = document.querySelector('.header');
           const headerHeight = header ? header.offsetHeight : 0;
@@ -38,6 +66,7 @@ const Header = () => {
             top: targetPosition,
             behavior: 'smooth'
           });
+          setActiveSection(id);
         }, isSideNavOpen ? 300 : 0);
       }
     }
@@ -45,8 +74,8 @@ const Header = () => {
 
   const navLinks = [
     { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
     { label: 'Products', href: '#products' },
+    { label: 'About', href: '#about' },
     { label: 'Blog', href: '#blog' },
     { label: 'Contact', href: '#footer' },
   ];
@@ -67,11 +96,21 @@ const Header = () => {
 
           <nav className="header-nav">
             <ul className="nav-links">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} onClick={handleNavClick}>{link.label}</a>
-                </li>
-              ))}
+              {navLinks.map((link) => {
+                const sectionId = link.href.substring(1);
+                const isActive = activeSection === sectionId;
+                return (
+                  <li key={link.href}>
+                    <a 
+                      href={link.href} 
+                      onClick={handleNavClick}
+                      className={isActive ? 'active' : ''}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
@@ -152,21 +191,36 @@ const Header = () => {
       {/* Side Navigation (Mobile) */}
       <aside className={`side-nav ${isSideNavOpen ? 'is-open' : ''}`}>
         <div className="side-nav-header">
-          <div className="header-logo">
+          {/* <div className="header-logo">
             <span className="logo-leaf" aria-hidden="true">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22L6.66 19.7C7.14 19.87 7.64 20 8 20C19 20 22 3 22 3C21 5 14 5.25 9 6.25C4 7.25 2 11.5 2 13.5C2 15.5 3.75 17.25 3.75 17.25C7 8 17 8 17 8Z" fill="#4caf50"/>
               </svg>
             </span>
             <span className="logo-text">Organigo</span>
-          </div>
+          </div> */}
+          {/* <button className="close-btn" onClick={closeSideNav}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button> */}
         </div>
         <ul className="side-nav-links">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <a href={link.href} onClick={handleNavClick}>{link.label}</a>
-            </li>
-          ))}
+          {navLinks.map((link) => {
+            const sectionId = link.href.substring(1);
+            const isActive = activeSection === sectionId;
+            return (
+              <li key={link.href}>
+                <a 
+                  href={link.href} 
+                  onClick={handleNavClick}
+                  className={isActive ? 'active' : ''}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </aside>
     </header>

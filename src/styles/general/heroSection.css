@@ -97,7 +97,7 @@
 @media (max-width: 48rem) {
   .hero-container {
     flex-direction: column;
-    text-align: center;
+    /* text-align: center; */
   }
 
   .hero-content {

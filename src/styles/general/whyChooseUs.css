@@ -121,23 +121,35 @@
 @media (max-width: 48rem) {
   .why-container {
     flex-direction: column;
-    text-align: center;
+    text-align: left; /* Keep left aligned */
+    gap: 2.5rem;
   }
 
   .why-content {
     flex-basis: auto;
+    width: 100%;
   }
 
   .why-subtitle {
     max-width: 100%;
   }
 
+  .why-subtitle::after {
+    margin-left: 0; /* Ensure dash stays left */
+  }
+
+  .reasons-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.5rem;
+  }
+
   .reason-item {
-    justify-content: center;
-    text-align: left;
+    justify-content: flex-start;
   }
 
   .why-image-wrapper {
     flex-basis: auto;
+    width: 100%;
   }
 }

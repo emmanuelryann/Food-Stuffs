@@ -25,8 +25,8 @@
 
 .trending-card {
   flex: 1;
-  flex-basis: max(12rem, 22%);
-  max-width: max(14rem, 24%);
+  flex-basis: max(10rem, 20%);
+  max-width: max(12rem, 23%);
   background: var(--clr-white);
   /* border-radius: 0.625rem; */
   overflow: hidden;
@@ -88,7 +88,7 @@
 }
 
 .trending-card-info {
-  padding: clamp(0.625rem, 1vw, 0.875rem);
+  padding: clamp(0.5rem, 1vw, 0.875rem);
   text-align: center;
 }
 
@@ -130,14 +130,26 @@
 /* --- Responsive --- */
 @media (max-width: 48rem) {
   .trending-card {
-    flex-basis: max(10rem, 45%);
-    max-width: max(12rem, 48%);
+    flex-basis: calc(45% - 0.5rem);
+    max-width: none;
+    padding: 0.5rem;
+  }
+
+  .trending-card-info {
+    padding: 0.375rem;
+  }
+
+  .trending-card-info h3 {
+    font-size: 0.75rem;
+  }
+
+  .trending-price {
+    font-size: 0.8125rem;
   }
 }
 
 @media (max-width: 30rem) {
   .trending-card {
     flex-basis: 100%;
-    max-width: 100%;
   }
 }

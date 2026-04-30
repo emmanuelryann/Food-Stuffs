@@ -57,12 +57,14 @@
 /* --- Responsive --- */
 @media (max-width: 48rem) {
   .features-container {
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 1rem;
   }
 
   .feature-card {
-    flex-basis: max(12rem, 45%);
+    flex-basis: auto;
+    padding: 0.5rem;
   }
 }
 
