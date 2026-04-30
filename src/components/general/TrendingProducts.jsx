@@ -2,10 +2,10 @@ import '../../styles/general/trendingProducts.css';
 
 const TrendingProducts = () => {
   const products = [
-    { id: 1, name: 'Tomatos', price: '$5.99', oldPrice: '$8.99', image: 'https://images.unsplash.com/photo-1561136594-7f68413a279f?w=300&h=300&fit=crop', rating: 4 },
-    { id: 2, name: 'Lettuce', price: '$2.99', oldPrice: '$5.99', image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=300&h=300&fit=crop', rating: 5 },
-    { id: 3, name: 'Corn', price: '$3.99', oldPrice: '$6.99', image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=300&fit=crop', rating: 4 },
-    { id: 4, name: 'Cabbage', price: '$1.99', oldPrice: '$4.99', image: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=300&h=300&fit=crop', rating: 5 },
+    { id: 1, name: 'Zobo', price: '$5.99', oldPrice: '$8.99', image: 'https://images.pexels.com/photos/12106430/pexels-photo-12106430.jpeg', rating: 4 },
+    { id: 2, name: 'Lettuce', price: '$2.99', oldPrice: '$5.99', image: 'https://media.istockphoto.com/id/469159458/photo/a-head-of-green-butter-lettuce-isolated-on-white-background.jpg?b=1&s=612x612&w=0&k=20&c=6OGmq1Qdbd2RkP4JrvSbpcf9PkUod-R9drrZP-rE1X0=', rating: 5 },
+    { id: 3, name: 'Corn', price: '$3.99', oldPrice: '$6.99', image: 'https://media.istockphoto.com/id/1403057876/photo/fresh-sweet-corn.jpg?b=1&s=612x612&w=0&k=20&c=ir4bU4_e66-YQ1ovJM-Is8Iplm4AlbK6EJwsBROdUsY=', rating: 4 },
+    { id: 4, name: 'Okra', price: '$1.99', oldPrice: '$4.99', image: 'https://media.istockphoto.com/id/1322439533/photo/ladys-finger-or-okra.jpg?b=1&s=612x612&w=0&k=20&c=suhFqEsF15fE8HhVT7k5jGUJV6nPhDEVXIZ-bMolQZA=', rating: 5 },
   ];
 
   const renderStars = (count) => {

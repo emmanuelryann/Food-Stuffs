@@ -40,7 +40,7 @@
 
 .hero-title {
   font-family: var(--ff-heading);
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
   font-weight: 700;
   color: #1b1b1b;
   line-height: 1.1;
@@ -63,7 +63,7 @@
   background: var(--clr-green-500);
   color: var(--clr-white);
   font-family: var(--ff-body);
-  font-size: 0.9375rem;
+  font-size: 0.8rem;
   font-weight: 700;
   /* border-radius: 2px; */
   transition: opacity 0.2s ease;

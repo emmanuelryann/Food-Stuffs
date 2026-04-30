@@ -25,7 +25,7 @@ const LandingPage = () => {
         <TrendingProducts />
         {/* <ClientTestimonials /> */}
         <SpecialDiscount />
-        {/* <LatestBlog /> */}
+        <LatestBlog />
         <Newsletter />
       </main>
       <Footer />

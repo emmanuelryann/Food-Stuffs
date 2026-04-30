@@ -39,7 +39,7 @@ const Header = () => {
     { label: 'About', href: '#about' },
     { label: 'Products', href: '#products' },
     { label: 'Blog', href: '#blog' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Contact', href: '#footer' },
   ];
 
   return (

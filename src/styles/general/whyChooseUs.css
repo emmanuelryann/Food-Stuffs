@@ -36,6 +36,15 @@
   max-width: max(90%, 20rem);
 }
 
+.why-subtitle::after {
+  content: '';
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  background: var(--clr-green-500);
+  margin-top: 1.25rem;
+}
+
 .reasons-list {
   display: flex;
   flex-direction: column;
