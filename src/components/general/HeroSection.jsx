@@ -5,19 +5,13 @@ const HeroSection = () => {
     <section className="hero" id="home">
       <div className="hero-container">
         <div className="hero-content">
-          <p className="hero-subtitle">Fresh &amp; Healthy</p>
-          <h2 className="hero-title">
-            Organics <span>Vegetables</span>
-          </h2>
+          <p className="hero-subtitle">Fresh & Healthy</p>
+          <h2 className="hero-title">Organics Vegetables</h2>
           <p className="hero-description">
-            Get fresh organic vegetables delivered right to your doorstep. 
-            We source only the finest naturally-grown produce for your family.
+            Our store offers you always fresh vegetables all year round. Buy from a wide range of high quality organic vegetables.
           </p>
           <a href="#products" className="hero-btn">
-            Shop Now
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-            </svg>
+            SHOP NOW
           </a>
         </div>
         <div className="hero-image-wrapper">

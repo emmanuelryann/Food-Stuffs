@@ -46,8 +46,8 @@ const WeLoveTrend = () => {
               </div>
               <div className="trend-card-info">
                 <h3>{product.name}</h3>
-                <div className="trend-stars">{renderStars(product.rating)}</div>
                 <p className="trend-price">{product.price}</p>
+                <div className="trend-stars">{renderStars(product.rating)}</div>
               </div>
             </div>
           ))}
