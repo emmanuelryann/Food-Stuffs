@@ -38,7 +38,7 @@ const SpecialDiscount = () => {
       <div className="discount-container">
         <div className="discount-image-side">
           <img
-            src="https://images.unsplash.com/photo-1587049352851-8d4e89133924?w=500&h=500&fit=crop"
+            src="https://images.pexels.com/photos/30666799/pexels-photo-30666799.jpeg"
             alt="Fresh organic fruits and vegetables"
             className="discount-img"
             loading="lazy"
@@ -47,27 +47,21 @@ const SpecialDiscount = () => {
 
         <div className="discount-content">
           <p className="discount-label">Fruits, Dairy, and Vegetables</p>
-          <h2 className="discount-title">
-            Special Discount for All<br />
-            <span>Organics</span> for You
-          </h2>
+          <h2 className="discount-title">Special Discount for All Organic Honey</h2>
 
           <div className="countdown">
             <div className="countdown-item">
               <span className="countdown-value">{pad(timeLeft.days)}</span>
               <span className="countdown-label">Days</span>
             </div>
-            <div className="countdown-separator">:</div>
             <div className="countdown-item">
               <span className="countdown-value">{pad(timeLeft.hours)}</span>
               <span className="countdown-label">Hours</span>
             </div>
-            <div className="countdown-separator">:</div>
             <div className="countdown-item">
               <span className="countdown-value">{pad(timeLeft.minutes)}</span>
               <span className="countdown-label">Minutes</span>
             </div>
-            <div className="countdown-separator">:</div>
             <div className="countdown-item">
               <span className="countdown-value">{pad(timeLeft.seconds)}</span>
               <span className="countdown-label">Seconds</span>
@@ -75,10 +69,7 @@ const SpecialDiscount = () => {
           </div>
 
           <a href="#products" className="discount-btn">
-            Shop Now
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-            </svg>
+            SHOP NOW
           </a>
         </div>
       </div>

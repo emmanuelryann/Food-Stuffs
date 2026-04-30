@@ -28,7 +28,7 @@
   flex-basis: max(12rem, 22%);
   max-width: max(14rem, 24%);
   background: var(--clr-white);
-  border-radius: 0.625rem;
+  /* border-radius: 0.625rem; */
   overflow: hidden;
   border: 0.0625rem solid var(--clr-neutral-200);
   transition: transform var(--transition-base), box-shadow var(--transition-base);

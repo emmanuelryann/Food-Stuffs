@@ -10,7 +10,7 @@ This folder contains all the React components for the Organigo organic vegetable
 1. **Header** - Navigation bar with logo, menu, search, and icons
 2. **HeroSection** - Main hero section with CTA button and product showcase
 3. **FeatureIcons** - Four feature cards (Best Product, Fast Delivery, Health Foods, Money Delivery)
-4. **WeLoveTrend** - Product carousel showing trending vegetables
+13. **LatestProducts** - Product carousel showing latest products
 5. **WhyChooseUs** - Benefits section with reasons to choose Organigo
 6. **BannerSection** - Two promotional banners with CTAs
 7. **TrendingProducts** - Grid display of trending products with ratings
@@ -27,7 +27,7 @@ All components have corresponding CSS files in the `styles/general/` folder:
 - `header.css`
 - `heroSection.css`
 - `featureIcons.css`
-- `weLoveTrend.css`
+- `latestProducts.css`
 - `whyChooseUs.css`
 - `bannerSection.css`
 - `trendingProducts.css`

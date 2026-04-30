@@ -91,7 +91,7 @@
   width: 80%;
   height: 90%;
   background: var(--clr-green-100);
-  border-radius: 1.5rem;
+  /* border-radius: 1.5rem; */
   z-index: 0;
   top: 5%;
   right: 0;
@@ -103,7 +103,7 @@
   width: 85%;
   max-width: max(16rem, 25vw);
   height: auto;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   object-fit: cover;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
 }

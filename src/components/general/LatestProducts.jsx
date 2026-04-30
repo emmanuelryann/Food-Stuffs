@@ -1,6 +1,6 @@
-import '../../styles/general/weLoveTrend.css';
+import '../../styles/general/latestProducts.css';
 
-const WeLoveTrend = () => {
+const LatestProducts = () => {
   const products = [
     { id: 1, name: 'Tomatos', price: '$5.99 – $15.99', image: 'https://images.pexels.com/photos/209401/pexels-photo-209401.jpeg', rating: 4 },
     { id: 2, name: 'Limes', price: '$2.99 – $8.99', image: 'https://images.pexels.com/photos/13427978/pexels-photo-13427978.jpeg', rating: 5 },
@@ -27,14 +27,14 @@ const WeLoveTrend = () => {
   };
 
   return (
-    <section className="we-love-trend" id="products">
-      <div className="trend-container">
-        <h2 className="section-title">We Love Trend</h2>
+    <section className="latest-products" id="products">
+      <div className="latest-container">
+        <h2 className="section-title">Latest Products</h2>
 
-        <div className="trend-grid">
+        <div className="latest-grid">
           {products.map((product) => (
-            <div key={product.id} className="trend-card">
-              <div className="trend-card-image">
+            <div key={product.id} className="latest-card">
+              <div className="latest-card-image">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -44,10 +44,10 @@ const WeLoveTrend = () => {
                   }}
                 />
               </div>
-              <div className="trend-card-info">
+              <div className="latest-card-info">
                 <h3>{product.name}</h3>
-                <p className="trend-price">{product.price}</p>
-                <div className="trend-stars">{renderStars(product.rating)}</div>
+                <div className="latest-stars">{renderStars(product.rating)}</div>
+                <p className="latest-price">{product.price}</p>
               </div>
             </div>
           ))}
@@ -57,4 +57,4 @@ const WeLoveTrend = () => {
   );
 };
 
-export default WeLoveTrend;
+export default LatestProducts;

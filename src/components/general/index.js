@@ -2,7 +2,7 @@
 export { default as Header } from './Header';
 export { default as HeroSection } from './HeroSection';
 export { default as FeatureIcons } from './FeatureIcons';
-export { default as WeLoveTrend } from './WeLoveTrend';
+export { default as LatestProducts } from './LatestProducts';
 export { default as WhyChooseUs } from './WhyChooseUs';
 export { default as BannerSection } from './BannerSection';
 export { default as TrendingProducts } from './TrendingProducts';

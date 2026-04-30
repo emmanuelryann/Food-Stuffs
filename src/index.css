@@ -37,7 +37,7 @@
 
   /* Typography */
   --ff-heading: 'Poppins', sans-serif;
-  --ff-body: 'Rubik', sans-serif;
+  --ff-body: 'Inter', sans-serif;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -58,7 +58,6 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 body {
@@ -67,6 +66,7 @@ body {
   color: var(--clr-neutral-800);
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body.no-scroll {

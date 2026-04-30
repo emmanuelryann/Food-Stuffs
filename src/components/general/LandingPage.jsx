@@ -1,7 +1,7 @@
 import Header from './Header';
 import HeroSection from './HeroSection';
 import FeatureIcons from './FeatureIcons';
-import WeLoveTrend from './WeLoveTrend';
+import LatestProducts from './LatestProducts';
 import WhyChooseUs from './WhyChooseUs';
 import BannerSection from './BannerSection';
 import TrendingProducts from './TrendingProducts';
@@ -19,7 +19,7 @@ const LandingPage = () => {
       <main>
         <HeroSection />
         <FeatureIcons />
-        <WeLoveTrend />
+        <LatestProducts />
         <WhyChooseUs />
         <BannerSection />
         <TrendingProducts />
