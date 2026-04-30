@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
@@ -21,6 +21,15 @@ function Layout() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const admin = JSON.parse(localStorage.getItem('admin') || '{}');
+
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [sidebarOpen]);
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -55,14 +64,15 @@ function Layout() {
   return (
     <div className="layout">
       {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
-      )}
+      <div 
+        className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} 
+        onClick={() => setSidebarOpen(false)} 
+      />
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
-          <h2 className="sidebar-logo"><i className="fa-solid fa-utensils"></i> Organico</h2>
+          <h2 className="sidebar-logo"> Organico</h2>
           <button
             className="sidebar-close"
             onClick={() => setSidebarOpen(false)}

@@ -38,7 +38,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 26.25rem;
 }
 
 .login-card {
@@ -87,13 +87,13 @@
 .login-error-toast {
   background: #fef2f2;
   color: #b91c1c;
-  border: 1px solid rgba(185, 28, 28, 0.2);
+  border: 0.0625rem solid rgba(185, 28, 28, 0.2);
 }
 
 .login-success-toast {
   background: #f0fdf4;
   color: #15803d;
-  border: 1px solid rgba(21, 128, 61, 0.2);
+  border: 0.0625rem solid rgba(21, 128, 61, 0.2);
 }
 
 .login-error-toast i,
@@ -106,7 +106,7 @@
   margin-top: var(--space-2);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .login-card {
     padding: var(--space-6);
   }

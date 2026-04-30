@@ -35,37 +35,36 @@
   --color-border: rgba(255, 255, 255, 0.07);
 
   /* Layout */
-  --sidebar-width:  240px;
-  --topbar-height:  60px;
+  --sidebar-width:  clamp(14rem, 18vw, 16rem);
+  --topbar-height:  clamp(3.5rem, 5vw, 4rem);
 
-  /* Spacing (4-point scale) */
-  --space-1:  0.25rem;
-  --space-2:  0.5rem;
-  --space-3:  0.75rem;
-  --space-4:  1rem;
-  --space-5:  1.25rem;
-  --space-6:  1.5rem;
-  --space-7:  1.75rem;
-  --space-8:  2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
+  /* Spacing (Responsive) */
+  --space-1:  clamp(0.2rem, 0.5vw, 0.25rem);
+  --space-2:  clamp(0.4rem, 1vw, 0.5rem);
+  --space-3:  clamp(0.6rem, 1.5vw, 0.75rem);
+  --space-4:  clamp(0.8rem, 2vw, 1rem);
+  --space-5:  clamp(1rem, 2.5vw, 1.25rem);
+  --space-6:  clamp(1.2rem, 3vw, 1.5rem);
+  --space-8:  clamp(1.5rem, 4vw, 2rem);
+  --space-10: clamp(2rem, 5vw, 2.5rem);
+  --space-12: clamp(2.5rem, 6vw, 3rem);
 
   /* Typography */
-  --font-size-xs:   0.75rem;
-  --font-size-sm:   0.875rem;
-  --font-size-base: 1rem;
-  --font-size-md:   1rem;
-  --font-size-lg:   1.125rem;
-  --font-size-xl:   1.25rem;
-  --font-size-2xl:  1.5rem;
-  --font-size-3xl:  1.875rem;
+  --font-size-xs:   clamp(0.7rem, 1.5vw, 0.75rem);
+  --font-size-sm:   clamp(0.8rem, 1.8vw, 0.875rem);
+  --font-size-base: clamp(0.9rem, 2vw, 1rem);
+  --font-size-md:   clamp(0.9rem, 2vw, 1rem);
+  --font-size-lg:   clamp(1rem, 2.2vw, 1.125rem);
+  --font-size-xl:   clamp(1.1rem, 2.5vw, 1.25rem);
+  --font-size-2xl:  clamp(1.3rem, 3vw, 1.5rem);
+  --font-size-3xl:  clamp(1.6rem, 4vw, 1.875rem);
 
   /* Border Radius */
-  --radius-sm:  4px;
-  --radius-md:  8px;
-  --radius-lg:  12px;
-  --radius-xl:  16px;
-  --radius-full: 9999px;
+  --radius-sm:  0.25rem;
+  --radius-md:  0.5rem;
+  --radius-lg:  0.75rem;
+  --radius-xl:  1rem;
+  --radius-full: 62.5rem;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -134,7 +133,7 @@ body:has(.layout) {
 .layout input,
 .layout select,
 .layout textarea {
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
   font-family: inherit;
@@ -179,12 +178,12 @@ body:has(.layout) {
   position: static;
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
 }
 
 .nav-icon {
   font-size: 1.25rem;
-  width: 24px;
+  width: 1.5rem;
   text-align: center;
   flex-shrink: 0;
   display: flex;
@@ -200,7 +199,7 @@ body:has(.layout) {
    ANIMATIONS
    ============================================================ */
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(0.75rem); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -218,15 +217,15 @@ body:has(.layout) {
    ============================================================ */
 .card-glass {
   background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border);
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-xl);
 }
 
 .card {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
 }
@@ -244,7 +243,7 @@ body:has(.layout) {
   font-size: var(--font-size-sm);
   font-weight: 600;
   font-family: inherit;
-  border: 1px solid transparent;
+  border: 0.0625rem solid transparent;
   cursor: pointer;
   transition: all var(--transition-base);
   white-space: nowrap;
@@ -311,7 +310,7 @@ body:has(.layout) {
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px var(--space-2);
+  padding: 0.125rem var(--space-2);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: 600;
@@ -345,8 +344,8 @@ body:has(.layout) {
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
@@ -407,7 +406,7 @@ body:has(.layout) {
 .input {
   width: 100%;
   background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-base);
@@ -419,7 +418,7 @@ body:has(.layout) {
 
 .input:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+  box-shadow: 0 0 0 0.1875rem var(--color-accent-subtle);
 }
 
 .input::placeholder {
@@ -437,7 +436,7 @@ body:has(.layout) {
 .table-container {
   overflow-x: auto;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
 }
 
 .table {
@@ -458,14 +457,14 @@ body:has(.layout) {
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
   white-space: nowrap;
 }
 
 .table td {
   padding: var(--space-3) var(--space-4);
   color: var(--color-text-primary);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
   vertical-align: middle;
 }
 
@@ -484,7 +483,7 @@ body:has(.layout) {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(0.25rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,11 +494,11 @@ body:has(.layout) {
 
 .modal {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   width: 100%;
-  max-width: 520px;
+  max-width: 32.5rem;
   max-height: 90vh;
   overflow-y: auto;
   animation: slideUp 0.25s ease;
@@ -511,7 +510,7 @@ body:has(.layout) {
   justify-content: space-between;
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
 }
 
 .modal-header h2 {
@@ -526,7 +525,7 @@ body:has(.layout) {
   justify-content: flex-end;
   margin-top: var(--space-6);
   padding-top: var(--space-5);
-  border-top: 1px solid var(--color-border);
+  border-top: 0.0625rem solid var(--color-border);
 }
 
 /* ============================================================
@@ -534,9 +533,9 @@ body:has(.layout) {
    ============================================================ */
 .spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  width: 1rem;
+  height: 1rem;
+  border: 0.125rem solid rgba(255, 255, 255, 0.25);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spinnerRotate 0.7s linear infinite;
@@ -544,9 +543,9 @@ body:has(.layout) {
 }
 
 .spinner-lg {
-  width: 36px;
-  height: 36px;
-  border-width: 3px;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-width: 0.1875rem;
 }
 
 /* ============================================================
@@ -562,7 +561,7 @@ body:has(.layout) {
   font-weight: 600;
   z-index: 9999;
   animation: slideUp 0.25s ease;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.5rem 1.875rem rgba(0, 0, 0, 0.4);
 }
 
 .toast-success {
@@ -649,7 +648,7 @@ body:has(.layout) {
 .tabs {
   display: flex;
   gap: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
   margin-bottom: var(--space-5);
   overflow-x: auto;
 }
@@ -662,7 +661,7 @@ body:has(.layout) {
   color: var(--color-text-secondary);
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 0.125rem solid transparent;
   cursor: pointer;
   transition: all var(--transition-base);
   white-space: nowrap;
@@ -683,14 +682,14 @@ body:has(.layout) {
    ============================================================ */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
   gap: var(--space-5);
   margin-bottom: var(--space-6);
 }
 
 .stat-card {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   display: flex;
@@ -734,8 +733,8 @@ body:has(.layout) {
    ============================================================ */
 .layout ::-webkit-scrollbar,
 .modal ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 0.3125rem;
+  height: 0.3125rem;
 }
 
 .layout ::-webkit-scrollbar-track,
