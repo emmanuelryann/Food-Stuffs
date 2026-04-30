@@ -62,7 +62,7 @@ function Layout() {
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
-          <h2 className="sidebar-logo"><i className="fa-solid fa-utensils"></i> Food Stuffs</h2>
+          <h2 className="sidebar-logo"><i className="fa-solid fa-utensils"></i> Organico</h2>
           <button
             className="sidebar-close"
             onClick={() => setSidebarOpen(false)}

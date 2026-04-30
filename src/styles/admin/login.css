@@ -70,15 +70,35 @@
   gap: var(--space-5);
 }
 
-.login-error {
-  background: var(--color-danger-subtle);
-  color: var(--color-danger);
+.login-error,
+.login-error-toast,
+.login-success-toast {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  animation: slideUp 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  animation: slideUp 0.3s ease;
+}
+
+.login-error,
+.login-error-toast {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid rgba(185, 28, 28, 0.2);
+}
+
+.login-success-toast {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid rgba(21, 128, 61, 0.2);
+}
+
+.login-error-toast i,
+.login-success-toast i {
+  font-size: 1.1em;
 }
 
 .login-btn {

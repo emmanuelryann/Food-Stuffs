@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/admin/Layout';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 import Login from './components/admin/Login';
+import Signup from './components/admin/Signup';
 import Dashboard from './components/admin/Dashboard';
 import Products from './components/admin/Products';
 import Orders from './components/admin/Orders';
@@ -25,6 +26,7 @@ function App() {
 
       {/* Admin Routes */}
       <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/register-4728" element={<Signup />} />
 
       <Route path="/admin" element={<ProtectedRoute />}>
         <Route element={<Layout />}>
