@@ -27,9 +27,18 @@ const Header = () => {
       const target = document.querySelector(href);
       if (target) {
         closeSideNav();
+        
+        // Use a slight delay to ensure side-nav close animation doesn't interfere
         setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+          const header = document.querySelector('.header');
+          const headerHeight = header ? header.offsetHeight : 0;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }, isSideNavOpen ? 300 : 0);
       }
     }
   };

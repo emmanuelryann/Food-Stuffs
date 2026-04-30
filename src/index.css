@@ -56,6 +56,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 10rem; /* Fallback for native scrolls */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

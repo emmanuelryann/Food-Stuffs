@@ -123,13 +123,13 @@
 
 @media (max-width: 30rem) {
   .newsletter-input {
-    border-radius: 0.375rem;
+    /* border-radius: 0.375rem; */
     flex-basis: 100%;
     margin-bottom: 0.5rem;
   }
 
   .newsletter-btn {
-    border-radius: 0.375rem;
+    /* border-radius: 0.375rem; */
     width: 100%;
   }
 }
