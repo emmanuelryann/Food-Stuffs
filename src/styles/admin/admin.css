@@ -328,6 +328,16 @@ body:has(.layout) {
   font-weight: 600;
   text-transform: capitalize;
 }
+.badge-plain {
+  background: none !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.badge-neutral {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+}
 
 .badge-success {
   background: var(--color-success-subtle);

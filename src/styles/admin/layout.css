@@ -17,6 +17,7 @@
   flex-direction: column;
   z-index: 100;
   transition: transform var(--transition-slow);
+  overscroll-behavior: contain;
 }
 
 .sidebar-header {
@@ -48,6 +49,7 @@
   flex-direction: column;
   gap: 0.25rem;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .nav-link {

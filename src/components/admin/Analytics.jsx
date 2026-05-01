@@ -162,7 +162,7 @@ function Analytics() {
                       {activityData.logs.map((log) => (
                         <tr key={log._id}>
                           <td>
-                            <span className={`badge ${getActionBadge(log.action)}`}>
+                            <span className={`badge badge-plain ${getActionBadge(log.action)}`}>
                               {log.action.replace(/_/g, ' ')}
                             </span>
                           </td>

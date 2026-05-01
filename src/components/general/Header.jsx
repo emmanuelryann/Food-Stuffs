@@ -8,16 +8,19 @@ const Header = () => {
   const openSideNav = () => {
     setIsSideNavOpen(true);
     document.body.classList.add('no-scroll');
+    document.documentElement.classList.add('no-scroll');
   };
 
   const closeSideNav = useCallback(() => {
     setIsSideNavOpen(false);
     document.body.classList.remove('no-scroll');
+    document.documentElement.classList.remove('no-scroll');
   }, []);
 
   useEffect(() => {
     return () => {
       document.body.classList.remove('no-scroll');
+      document.documentElement.classList.remove('no-scroll');
     };
   }, []);
 

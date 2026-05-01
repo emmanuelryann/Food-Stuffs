@@ -70,8 +70,10 @@ body {
   overflow-x: hidden;
 }
 
+html.no-scroll,
 body.no-scroll {
-  overflow: hidden;
+  overflow: hidden !important;
+  height: 100vh !important;
 }
 
 a {

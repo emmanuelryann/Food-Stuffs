@@ -23,11 +23,16 @@ function Layout() {
 
   useEffect(() => {
     if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('no-scroll');
+      document.documentElement.classList.add('no-scroll');
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('no-scroll');
+      document.documentElement.classList.remove('no-scroll');
     }
-    return () => { document.body.style.overflow = 'unset'; };
+    return () => { 
+      document.body.classList.remove('no-scroll');
+      document.documentElement.classList.remove('no-scroll');
+    };
   }, [sidebarOpen]);
 
   const logoutMutation = useMutation({

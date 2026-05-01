@@ -145,7 +145,7 @@ function AdminManagement() {
                     <td><strong>{admin?.name}</strong></td>
                     <td>{admin?.email}</td>
                     <td>
-                      <span className={`badge ${admin.role === 'super_admin' ? 'badge-info' : 'badge-neutral'}`}>
+                      <span className={`badge badge-plain ${admin.role === 'super_admin' ? 'badge-info' : 'badge-neutral'}`}>
                         {admin.role.replace('_', ' ')}
                       </span>
                     </td>
@@ -190,7 +190,7 @@ function AdminManagement() {
             <div className="admin-detail">
               <div className="detail-row"><span>Name:</span><span>{viewAdmin.name}</span></div>
               <div className="detail-row"><span>Email:</span><span>{viewAdmin.email}</span></div>
-              <div className="detail-row"><span>Role:</span><span className="badge badge-info">{viewAdmin.role.replace('_', ' ')}</span></div>
+              <div className="detail-row"><span>Role:</span><span className={`badge badge-plain ${viewAdmin.role === 'super_admin' ? 'badge-info' : 'badge-neutral'}`}>{viewAdmin.role.replace('_', ' ')}</span></div>
               <div className="detail-row"><span>Status:</span><span className={`badge ${getStatusBadge(viewAdmin.status)}`}>{viewAdmin.status}</span></div>
               <div className="detail-row"><span>Email Verified:</span><span>{viewAdmin.isEmailVerified ? 'Yes' : 'No'}</span></div>
               <div className="detail-row"><span>Last Login:</span><span>{viewAdmin.lastLogin ? new Date(viewAdmin.lastLogin).toLocaleString() : 'Never'}</span></div>
