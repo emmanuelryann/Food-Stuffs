@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
@@ -12,6 +12,13 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const admin = localStorage.getItem('admin');
+    if (admin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [navigate]);
 
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
@@ -28,7 +35,7 @@ function Login() {
       // Re-fetch CSRF token to sync with the new authenticated session cookie
       await fetchCsrfToken();
       localStorage.setItem('admin', JSON.stringify(data.admin));
-      navigate('/admin');
+      navigate('/admin', { replace: true });
     },
     onError: (err) => {
       setError(err.message);

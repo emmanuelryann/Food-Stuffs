@@ -56,7 +56,6 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  color: var(--color-text-secondary); /* Original link color */
   font-size: var(--font-size-base);
   font-weight: 500;
   transition: all var(--transition-base);
@@ -64,25 +63,19 @@
 
 .nav-link:hover {
   background: var(--color-bg-hover);
-  color: var(--color-text-primary);
 }
 
 .nav-link i {
-  color: var(--color-text-muted); /* New icon color */
-  transition: color var(--transition-base);
-}
-
-.nav-link:hover i {
   color: var(--color-accent);
+  transition: color var(--transition-base);
 }
 
 .nav-link-active {
   background: var(--color-accent-subtle);
-  color: var(--color-accent);
 }
 
-.nav-link-active i {
-  color: var(--color-accent);
+.nav-label {
+  color: #fff;
 }
 
 .sidebar-footer {

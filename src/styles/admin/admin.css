@@ -95,7 +95,7 @@
 /* Override the general site's body background when on admin pages */
 .login-page,
 .layout {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text-primary);
@@ -103,12 +103,16 @@
   line-height: 1.5;
 }
 
+h1, h2, h3, h4, h5, h6, .section-title, .sidebar-logo {
+  font-family: 'Poppins', sans-serif !important;
+}
+
 /* Make the html/body fill the viewport properly on admin pages */
 body:has(.login-page),
 body:has(.layout) {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Ensure Font Awesome icons are visible and correctly sized */

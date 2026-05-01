@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { fetchWithAuth } from '../../utils/api';
@@ -18,6 +18,13 @@ function Signup() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const admin = localStorage.getItem('admin');
+    if (admin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [navigate]);
 
   const signupMutation = useMutation({
     mutationFn: async (data) => {
