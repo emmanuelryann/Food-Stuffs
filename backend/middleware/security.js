@@ -54,6 +54,7 @@ const doubleCsrfOptions = {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
+    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
   },
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],

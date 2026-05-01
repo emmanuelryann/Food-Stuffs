@@ -92,14 +92,16 @@
   transition: width var(--transition-base);
 }
 
-.nav-links li a:hover::after,
-.nav-links li a.active::after {
-  width: 1.5rem; /* Short dash style */
-}
+@media (hover: hover) {
+  .nav-links li a:hover::after,
+  .nav-links li a.active::after {
+    width: 1.5rem; /* Short dash style */
+  }
 
-.nav-links li a:hover,
-.nav-links li a.active {
-  color: var(--clr-green-500);
+  .nav-links li a:hover,
+  .nav-links li a.active {
+    color: var(--clr-green-500);
+  }
 }
 
 /* --- Bottom Bar --- */
@@ -138,8 +140,10 @@
   cursor: pointer;
 }
 
-.departments-btn:hover {
-  background: var(--clr-green-600);
+@media (hover: hover) {
+  .departments-btn:hover {
+    background: var(--clr-green-600);
+  }
 }
 
 /* Search Area */
@@ -187,8 +191,10 @@
   cursor: pointer;
 }
 
-.search-btn:hover {
-  background: var(--clr-green-700);
+@media (hover: hover) {
+  .search-btn:hover {
+    background: var(--clr-green-700);
+  }
 }
 
 /* Icons */
@@ -210,8 +216,10 @@
   cursor: pointer;
 }
 
-.icon-btn:hover {
-  color: var(--clr-green-500);
+@media (hover: hover) {
+  .icon-btn:hover {
+    color: var(--clr-green-500);
+  }
 }
 
 .cart-badge {
@@ -317,8 +325,10 @@
   transition: color var(--transition-base);
 }
 
-.close-btn:hover {
-  color: var(--clr-green-600);
+@media (hover: hover) {
+  .close-btn:hover {
+    color: var(--clr-green-600);
+  }
 }
 
 .side-nav-links {
@@ -369,8 +379,10 @@
   background: var(--clr-green-500);
 }
 
-.side-nav-links li a:hover {
-  color: var(--clr-green-600);
+@media (hover: hover) {
+  .side-nav-links li a:hover {
+    color: var(--clr-green-600);
+  }
 }
 
 /* --- Responsive --- */
@@ -396,24 +408,25 @@
 
 @media (max-width: 48rem) {
   /* 768px */
+  .departments-wrapper {
+    display: none;
+  }
+}
+
+@media (max-width: 30rem) {
+  /* 465px */
   .header-bottom-inner {
     flex-wrap: wrap;
     gap: 1rem;
   }
 
-  .departments-wrapper {
-    display: none;
-  }
-
   .header-search {
-    order: 2;
     max-width: 100%;
+    flex-basis: 100%;
     width: 100%;
-    margin-top: 0.5rem;
   }
 
   .header-icons {
     margin-left: auto;
-    order: 1;
   }
 }

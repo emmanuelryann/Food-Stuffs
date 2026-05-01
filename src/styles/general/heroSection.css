@@ -70,9 +70,11 @@
   letter-spacing: 0.5px;
 }
 
-.hero-btn:hover {
-  background: var(--clr-green-600);
-  /* opacity: 0.9; */
+@media (hover: hover) {
+  .hero-btn:hover {
+    background: var(--clr-green-600);
+    /* opacity: 0.9; */
+  }
 }
 
 .hero-image-wrapper {

@@ -120,9 +120,11 @@
   letter-spacing: 0.5px;
 }
 
-.discount-btn:hover {
-  background: var(--clr-green-600);
-  opacity: 0.9;
+@media (hover: hover) {
+  .discount-btn:hover {
+    background: var(--clr-green-600);
+    opacity: 0.9;
+  }
 }
 
 /* --- Responsive --- */

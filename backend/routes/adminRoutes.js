@@ -188,7 +188,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 		const token = jwt.sign(
 			{ adminId: admin._id, email: admin.email, role: admin.role },
 			process.env.JWT_SECRET,
-			{ expiresIn: "7d" }
+			{ expiresIn: "3d" }
 		);
 
 		// Get device info from user agent
@@ -198,9 +198,9 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 		// Get IP address
 		const ipAddress = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || "Unknown IP";
 
-		// Set expiry date to 7 days from now
+		// Set expiry date to 3 days from now
 		const expiresAt = new Date();
-		expiresAt.setDate(expiresAt.getDate() + 7);
+		expiresAt.setDate(expiresAt.getDate() + 3);
 
 		// Delete session with same adminId and ipAddress
 		await AdminSession.deleteMany({ adminId: admin._id, ipAddress: ipAddress });
@@ -224,7 +224,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'lax',
-			maxAge: 7 * 24 * 60 * 60 * 1000,
+			maxAge: 3 * 24 * 60 * 60 * 1000,
 		});
 
 		logActivity({

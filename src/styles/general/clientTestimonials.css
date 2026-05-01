@@ -69,9 +69,11 @@
   transition: transform var(--transition-base), border-color var(--transition-base);
 }
 
-.testimonial-card:hover {
-  transform: translateY(-0.25rem);
-  border-color: var(--clr-green-500);
+@media (hover: hover) {
+  .testimonial-card:hover {
+    transform: translateY(-0.25rem);
+    border-color: var(--clr-green-500);
+  }
 }
 
 .testimonial-avatar {

@@ -265,9 +265,11 @@ body:has(.layout) {
   color: #fff;
   border-color: var(--color-accent);
 }
-.btn-primary:hover:not(:disabled) {
-  background: #0ea271;
-  border-color: #0ea271;
+@media (hover: hover) {
+  .btn-primary:hover:not(:disabled) {
+    background: #0ea271;
+    border-color: #0ea271;
+  }
 }
 
 .btn-secondary {
@@ -275,8 +277,10 @@ body:has(.layout) {
   color: var(--color-text-primary);
   border-color: var(--color-border);
 }
-.btn-secondary:hover:not(:disabled) {
-  background: var(--color-bg-hover);
+@media (hover: hover) {
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-bg-hover);
+  }
 }
 
 .btn-danger {
@@ -284,8 +288,10 @@ body:has(.layout) {
   color: #fff;
   border-color: var(--color-danger);
 }
-.btn-danger:hover:not(:disabled) {
-  background: #dc2626;
+@media (hover: hover) {
+  .btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+  }
 }
 
 .btn-ghost {
@@ -293,9 +299,11 @@ body:has(.layout) {
   color: var(--color-text-secondary);
   border-color: transparent;
 }
-.btn-ghost:hover:not(:disabled) {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
+@media (hover: hover) {
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+  }
 }
 
 .btn-sm {
@@ -364,8 +372,10 @@ body:has(.layout) {
    ============================================================ */
 /* Input styles moved to form elements section */
 
-.icon-btn:hover {
-  color: var(--color-text-primary);
+@media (hover: hover) {
+  .icon-btn:hover {
+    color: var(--color-text-primary);
+  }
 }
 
 
@@ -453,8 +463,10 @@ body:has(.layout) {
   border-bottom: none;
 }
 
-.table tbody tr:hover {
-  background: var(--color-bg-hover);
+@media (hover: hover) {
+  .table tbody tr:hover {
+    background: var(--color-bg-hover);
+  }
 }
 
 /* ============================================================
@@ -649,8 +661,10 @@ body:has(.layout) {
   outline: none;
 }
 
-.tab:hover {
-  color: var(--color-text-primary);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--color-text-primary);
+  }
 }
 
 .tab.active {
@@ -679,9 +693,11 @@ body:has(.layout) {
   transition: border-color var(--transition-base), transform var(--transition-base);
 }
 
-.stat-card:hover {
-  border-color: var(--color-accent-subtle);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .stat-card:hover {
+    border-color: var(--color-accent-subtle);
+    transform: translateY(-2px);
+  }
 }
 
 .stat-label {

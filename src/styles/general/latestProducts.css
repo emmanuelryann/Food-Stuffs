@@ -34,9 +34,11 @@
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.latest-card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .latest-card:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+  }
 }
 
 .latest-card-image {
@@ -56,8 +58,10 @@
   transition: transform var(--transition-slow);
 }
 
-.latest-card:hover .latest-card-image img {
-  transform: scale(1.05);
+@media (hover: hover) {
+  .latest-card:hover .latest-card-image img {
+    transform: scale(1.05);
+  }
 }
 
 .latest-card-info {

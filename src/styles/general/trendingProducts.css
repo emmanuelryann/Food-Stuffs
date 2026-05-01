@@ -34,9 +34,11 @@
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.trending-card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .trending-card:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+  }
 }
 
 .trending-card-image {
@@ -57,8 +59,10 @@
   transition: transform var(--transition-slow);
 }
 
-.trending-card:hover .trending-card-image img {
-  transform: scale(1.05);
+@media (hover: hover) {
+  .trending-card:hover .trending-card-image img {
+    transform: scale(1.05);
+  }
 }
 
 .trending-cart-btn {
@@ -78,13 +82,15 @@
   transition: opacity var(--transition-base), transform var(--transition-base), background var(--transition-base);
 }
 
-.trending-card:hover .trending-cart-btn {
-  opacity: 1;
-  transform: translateY(0);
-}
+@media (hover: hover) {
+  .trending-card:hover .trending-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.trending-cart-btn:hover {
-  background: var(--clr-green-700);
+  .trending-cart-btn:hover {
+    background: var(--clr-green-700);
+  }
 }
 
 .trending-card-info {

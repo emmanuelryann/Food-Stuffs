@@ -128,7 +128,7 @@ function Layout() {
               <span className="admin-role badge badge-info">{admin.role || 'admin'}</span>
             </div>
             <button
-              className="btn btn-ghost btn-sm"
+              className="btn btn-danger btn-sm"
               onClick={handleLogout}
               disabled={logoutMutation.isPending}
             >

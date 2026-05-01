@@ -31,8 +31,10 @@
   flex-shrink: 0;
 }
 
-.brand-name:hover {
-  color: var(--clr-neutral-700);
+@media (hover: hover) {
+  .brand-name:hover {
+    color: var(--clr-neutral-700);
+  }
 }
 
 /* Newsletter */
@@ -102,8 +104,10 @@
   flex-shrink: 0;
 }
 
-.newsletter-btn:hover {
-  background: var(--clr-dark-800);
+@media (hover: hover) {
+  .newsletter-btn:hover {
+    background: var(--clr-dark-800);
+  }
 }
 
 /* --- Responsive --- */
