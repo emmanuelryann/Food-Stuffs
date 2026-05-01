@@ -52,7 +52,7 @@ const doubleCsrfOptions = {
   cookieName: "x-csrf-token",
   cookieOptions: {
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
   },
   size: 64,

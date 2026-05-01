@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { fetchWithAuth, fetchCsrfToken } from '../../utils/api';
+import { fetchWithAuth, fetchCsrfToken, API } from '../../utils/api';
 import '../../styles/admin/changepassword.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function ChangePassword() {
   const navigate = useNavigate();

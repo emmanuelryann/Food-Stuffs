@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { fetchWithAuth } from '../../utils/api';
+import { fetchWithAuth, API } from '../../utils/api';
 import '../../styles/admin/admin.css';
 import '../../styles/admin/login.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function Signup() {
   const [formData, setFormData] = useState({

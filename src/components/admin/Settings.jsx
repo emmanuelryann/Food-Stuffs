@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchJsonWithAuth } from '../../utils/api';
+import { fetchJsonWithAuth, API } from '../../utils/api';
 import '../../styles/admin/settings.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function Settings() {
   const queryClient = useQueryClient();
