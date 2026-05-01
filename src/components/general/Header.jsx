@@ -7,20 +7,22 @@ const Header = () => {
 
   const openSideNav = () => {
     setIsSideNavOpen(true);
+    document.body.style.top = `-${window.scrollY}px`;
     document.body.classList.add('no-scroll');
-    document.documentElement.classList.add('no-scroll');
   };
 
   const closeSideNav = useCallback(() => {
     setIsSideNavOpen(false);
+    const scrollY = document.body.style.top;
     document.body.classList.remove('no-scroll');
-    document.documentElement.classList.remove('no-scroll');
+    document.body.style.top = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
   }, []);
 
   useEffect(() => {
     return () => {
       document.body.classList.remove('no-scroll');
-      document.documentElement.classList.remove('no-scroll');
+      document.body.style.top = '';
     };
   }, []);
 

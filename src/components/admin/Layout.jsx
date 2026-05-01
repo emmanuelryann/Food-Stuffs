@@ -23,15 +23,19 @@ function Layout() {
 
   useEffect(() => {
     if (sidebarOpen) {
+      document.body.style.top = `-${window.scrollY}px`;
       document.body.classList.add('no-scroll');
-      document.documentElement.classList.add('no-scroll');
     } else {
+      const scrollY = document.body.style.top;
       document.body.classList.remove('no-scroll');
-      document.documentElement.classList.remove('no-scroll');
+      document.body.style.top = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
     return () => { 
       document.body.classList.remove('no-scroll');
-      document.documentElement.classList.remove('no-scroll');
+      document.body.style.top = '';
     };
   }, [sidebarOpen]);
 

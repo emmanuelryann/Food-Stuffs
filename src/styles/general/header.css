@@ -4,7 +4,9 @@
 
 .header {
   position: sticky;
-  top: 0;
+  top: -1px; /* Helps hide the tiny sub-pixel gap on mobile scroll */
+  align-self: flex-start; /* Fixes sticky behavior inside flex containers */
+  width: 100%;
   z-index: 100;
   background: var(--clr-white);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.06);

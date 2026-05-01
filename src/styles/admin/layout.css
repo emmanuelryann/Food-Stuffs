@@ -118,7 +118,9 @@
 /* Topbar */
 .topbar {
   position: sticky;
-  top: 0;
+  top: -1px;
+  align-self: flex-start;
+  width: 100%;
   height: var(--topbar-height);
   background: rgba(15, 17, 23, 0.8);
   backdrop-filter: blur(16px);
